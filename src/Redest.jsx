@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectAll, selectOne } from './selectors';
+import { select, selectOne } from './selectors';
 import restAction from './actions';
 
 export default (WrappedComponent, dataToRetrieve) => {
@@ -45,7 +45,7 @@ export default (WrappedComponent, dataToRetrieve) => {
                 if (reducer.id) {
                     props[propName] = selectOne(state[reducer.reducer], reducer.id);
                 } else {
-                    props[propName] = selectAll(state[reducer.reducer], reducer.filter);
+                    props[propName] = select(state[reducer.reducer], reducer.filter);
                 }
             });
             return props;

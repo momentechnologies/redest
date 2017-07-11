@@ -4,7 +4,7 @@ import addPrefix from './addPrefix';
 const newInitialState = (prefix, baseUrl) => {
     return {
         entities: {},
-        getMeta: {},
+        meta: {},
         prefix,
         baseUrl
     }
@@ -51,8 +51,8 @@ export default (prefix, baseUrl, reducer = defaultReducer) => {
                     case 'start':
                         return {
                             ...state,
-                            getMeta: {
-                                ...state.getMeta,
+                            meta: {
+                                ...state.meta,
                                 [key]: {
                                     isLoading: true,
                                     error: false,
@@ -63,8 +63,8 @@ export default (prefix, baseUrl, reducer = defaultReducer) => {
                     case 'success':
                         return {
                             ...state,
-                            getMeta: {
-                                ...state.getMeta,
+                            meta: {
+                                ...state.meta,
                                 [key]: {
                                     isLoading: false,
                                     error: false,
@@ -77,8 +77,8 @@ export default (prefix, baseUrl, reducer = defaultReducer) => {
                     case 'error':
                         return {
                             ...state,
-                            getMeta: {
-                                ...state.getMeta,
+                            meta: {
+                                ...state.meta,
                                 [key]: {
                                     isLoading: false,
                                     error: action.payload.error,
@@ -94,8 +94,8 @@ export default (prefix, baseUrl, reducer = defaultReducer) => {
                     case 'start':
                         return {
                             ...state,
-                            getMeta: {
-                                ...state.getMeta,
+                            meta: {
+                                ...state.meta,
                                 [action.payload]: {
                                     isLoading: true,
                                     error: false,
@@ -106,8 +106,8 @@ export default (prefix, baseUrl, reducer = defaultReducer) => {
                     case 'success':
                         return {
                             ...state,
-                            getMeta: {
-                                ...state.getMeta,
+                            meta: {
+                                ...state.meta,
                                 [action.payload.id]: {
                                     isLoading: false,
                                     error: false,
@@ -122,8 +122,8 @@ export default (prefix, baseUrl, reducer = defaultReducer) => {
                     case 'error':
                         return {
                             ...state,
-                            getMeta: {
-                                ...state.getMeta,
+                            meta: {
+                                ...state.meta,
                                 [action.payload.id]: {
                                     isLoading: false,
                                     error: action.payload.error,
@@ -141,7 +141,7 @@ export default (prefix, baseUrl, reducer = defaultReducer) => {
                         ...state.entities,
                         [action.payload.id]: action.payload
                     },
-                    getMeta: resetMeta(state.getMeta)
+                    meta: resetMeta(state.meta)
                 };
             case types.UPDATE:
                 return {
@@ -150,7 +150,7 @@ export default (prefix, baseUrl, reducer = defaultReducer) => {
                         ...state.entities,
                         [action.payload.id]: action.payload
                     },
-                    getMeta: resetMeta(state.getMeta)
+                    meta: resetMeta(state.meta)
                 };
             case types.DELETE:
                 let newEntities = {...state.entities};
@@ -158,12 +158,12 @@ export default (prefix, baseUrl, reducer = defaultReducer) => {
                 return {
                     ...state,
                     entities: newEntities,
-                    getMeta: resetMeta(state.getMeta)
+                    meta: resetMeta(state.meta)
                 };
             case types.INVALIDATE:
                 return {
                     ...state,
-                    getMeta: resetMeta(state.getMeta)
+                    meta: resetMeta(state.meta)
                 };
             default:
                 return reducer(state, action);
