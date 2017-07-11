@@ -34,3 +34,76 @@ export combineReducers({
     ...storeSetup(['users', 'repos'])
 });
 ```
+That's it. you now have a two new stores(users and repos) will all the Rest capabilities.
+
+## Access the data and modify it
+```JavaScript
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Redest } from 'redest';
+
+const Component = (props) => {
+    return (
+        <div 
+            onClick={() => {
+                props.users_create({ name: 'Max Moeschinger'})
+            }}
+        >
+            test
+        </div>
+    )
+};
+
+Component.propTypes = {
+    users: PropTypes.object.isRequired,
+    users_create: PropTypes.func.isRequired
+};
+
+export default Redest(Component, [{ reducer: 'users' }]);
+```
+
+We need to pass an array to the `Redest` wrapper with the data we want it to return.
+
+There is two different type of object you can pass to it. The first one will select a single 
+instance in the state. You can see that we are passing a function which takes a `props` parameter.
+
+```JavaScript
+{
+  reducer: 'users',
+  id: (props) => props.match.params.id
+}
+```
+This will return an object looking like this
+```JavaScript
+{
+    entity: Object, 
+    meta: {
+        error:false,
+        ids: [],
+        isLoading: false,
+        loadedAt: 1499797369337
+    }
+}
+```
+
+and the second type is to select multiple entities in the state.
+```JavaScript
+{
+  reducer: 'users',
+  filter: (props) => ({
+      active: props.active
+  })
+}
+```
+This will return an object looking like this
+```JavaScript
+{
+    entities: Array, 
+    meta: {
+        error:false,
+        ids: [],
+        isLoading: false,
+        loadedAt: 1499797369337
+    }
+}
+```
