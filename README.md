@@ -12,7 +12,7 @@ In order to use this package you need to have those installed:
 2. react-redux
 3. prop-types
 
-#Installation
+# Installation
 You start by adding this package to your project
 ```
 npm i redest
