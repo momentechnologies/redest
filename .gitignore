@@ -1,4 +1,4 @@
 distribution
 node_modules
-
+.idea
 *.log
