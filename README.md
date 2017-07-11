@@ -1,4 +1,5 @@
 [![npm version](https://badge.fury.io/js/redest.svg)](https://badge.fury.io/js/redest)
+[![Build Status](https://travis-ci.org/maxmoeschinger/redest.svg?branch=master)](https://travis-ci.org/maxmoeschinger/redest)
 # redest
 How you ever been annoyed by the amount of boilerplate which comes with communicating to the api from react/redux? well this is what we are trying to solve here. 
 
