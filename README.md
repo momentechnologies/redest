@@ -22,6 +22,13 @@ yarn add redest
 ```
 
 ## Setup reducer
+Where you define all of your reducers, you should import the reducerSetup module and pass it an array of endpoints you want it to handle. The string you passed here will be used throughout the setup.
+
 ```JavaScript
-export const () => { console.log('test') }
+import { combineReducers } from 'redux';
+import { reducerSetup } from 'redest';
+
+export combineReducers({
+    ...storeSetup(['users', 'repos'])
+});
 ```
