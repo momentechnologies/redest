@@ -5,9 +5,7 @@ export default (state, filter = null) => {
     const meta = state.meta[metaKey];
     let entities = [];
     if (meta && meta.ids) {
-        entities = meta.ids.map(id => {
-            return state.entities[id];
-        }).filter(entity => entity);
+        entities = meta.ids.map((id) => state.entities[id]).filter((entity) => entity);
     }
     return {
         entities: entities,

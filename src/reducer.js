@@ -1,17 +1,14 @@
 import { selectMetaKey } from './selectors';
 import addPrefix from './addPrefix';
 
-const newInitialState = (prefix, baseUrl) => {
-    return {
+const newInitialState = (prefix, baseUrl) => ({
         entities: {},
         meta: {},
         prefix,
         baseUrl
-    }
-};
+    });
 
-export const typesCreator = (prefix) => {
-    return addPrefix(prefix, {
+export const typesCreator = (prefix) => addPrefix(prefix, {
         LOAD_ALL: 'LOAD_ALL',
         LOAD_ONE: 'LOAD_ONE',
         UPDATE: 'UPDATE',
@@ -19,15 +16,12 @@ export const typesCreator = (prefix) => {
         DELETE: 'DELETE',
         INVALIDATE: 'INVALIDATE'
     });
-};
 
-const defaultReducer = (state, action) => {
-    return state;
-};
+const defaultReducer = (state, action) => state;
 
 const resetMeta = (meta) => {
     let newGetMeta = {};
-    Object.keys(meta).forEach(getKey => {
+    Object.keys(meta).forEach((getKey) => {
         newGetMeta[getKey] = {
             ...meta[getKey],
             loadedAt: false
@@ -36,9 +30,7 @@ const resetMeta = (meta) => {
     return newGetMeta
 };
 
-const currentTimestamp = () => {
-    return new Date().getTime();
-};
+const currentTimestamp = () => new Date().getTime();
 
 export default (prefix, baseUrl, reducer = defaultReducer) => {
     const types = typesCreator(prefix);

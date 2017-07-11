@@ -1,5 +1,4 @@
-export default (url, method = 'GET', data = null) => {
-    return new Promise((resolve, reject) => {
+export default (url, method = 'GET', data = null) => new Promise((resolve, reject) => {
         let fetchData = {
             method,
             headers: {
@@ -16,26 +15,24 @@ export default (url, method = 'GET', data = null) => {
         }
 
         if (method === 'GET' && data !== null) {
-            url += '?' + Object.keys(data).map(key => key + '=' + data[key]).join('&');
+            url += '?' + Object.keys(data).map((key) => key + '=' + data[key]).join('&');
         }
 
         fetch('/api' + url, fetchData)
             .then(handleErrors(reject))
-            .then(response => response.json())
-            .then(json => {
+            .then((response) => response.json())
+            .then((json) => {
                 resolve(json);
             })
-            .catch(error => {
+            .catch((error) => {
                 reject(error);
             });
     });
-};
 
-const handleErrors = (reject) => {
-    return (response) => {
+const handleErrors = (reject) => (response) => {
         if (!response.ok) {
             return response.json().then(
-                success => {
+                (success) => {
                     reject(success);
                 },
                 () => {
@@ -45,4 +42,3 @@ const handleErrors = (reject) => {
         }
         return response;
     };
-};

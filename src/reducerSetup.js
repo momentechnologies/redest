@@ -2,7 +2,7 @@ import reducer from './reducer';
 
 export default (reducers) => {
     let stores = {};
-    reducers.forEach(reducerInfo => {
+    reducers.forEach((reducerInfo) => {
         if (typeof reducerInfo !== 'object') {
             stores[reducerInfo] = reducer(reducerInfo, '/' + reducerInfo);
         } else {

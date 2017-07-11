@@ -16,7 +16,7 @@ export default (WrappedComponent, dataToRetrieve) => {
             this.check();
         }
         check() {
-            dataToRetrieve.forEach(endpoint => {
+            dataToRetrieve.forEach((endpoint) => {
                 const endpointInfo = this.props['_' + endpoint.reducer];
                 const actions = restAction(endpointInfo.prefix, endpointInfo.baseUrl);
                 if (endpoint.id) {
@@ -32,10 +32,14 @@ export default (WrappedComponent, dataToRetrieve) => {
         }
     }
 
+    hoc.propTypes = {
+        dispatch: PropTypes.func.isRequired
+    };
+
     return connect(
         (state) => {
             let props = {};
-            dataToRetrieve.forEach(reducer => {
+            dataToRetrieve.forEach((reducer) => {
                 props['_' + reducer.reducer] = {
                     prefix: state[reducer.reducer].prefix,
                     baseUrl: state[reducer.reducer].baseUrl

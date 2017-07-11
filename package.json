@@ -9,14 +9,24 @@
   "scripts": {
     "build": "babel src --out-dir distribution",
     "prepublish": "npm run build",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint src/**",
+    "lint:fix": "eslint src/** --fix"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src/"
+    ]
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.3",
     "babel-jest": "^20.0.3",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.2.0",
+    "eslint-plugin-react": "^7.1.0",
     "jest": "^20.0.4",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
@@ -27,5 +37,8 @@
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-redux": "^5.0.5"
+  },
+  "dependencies": {
+    "eslint-plugin-promise": "^3.5.0"
   }
 }
