@@ -107,3 +107,6 @@ This will return an object looking like this
     }
 }
 ```
+
+# Contributing
+All contribution is welcomed. Just create a pull request and we will review it.
