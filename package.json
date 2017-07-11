@@ -28,15 +28,15 @@
     "eslint": "^4.2.0",
     "eslint-plugin-react": "^7.1.0",
     "jest": "^20.0.4",
-    "prop-types": "^15.5.10",
-    "react": "^15.6.1",
-    "react-redux": "^5.0.5",
+    "prop-types": "^15.5.0",
+    "react": "^15.4.0",
+    "react-redux": "^5.0.0",
     "regenerator-runtime": "^0.10.5"
   },
   "peerDependencies": {
-    "prop-types": "^15.5.10",
-    "react": "^15.6.1",
-    "react-redux": "^5.0.5"
+    "prop-types": "^15.5.0",
+    "react": "^15.4.0",
+    "react-redux": "^5.0.0"
   },
   "dependencies": {
     "eslint-plugin-promise": "^3.5.0"
