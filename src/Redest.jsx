@@ -24,22 +24,22 @@ const buildActions = (dataToRetrieve, props) => {
     return actions;
 };
 
-const buildProps = (dataToRetrieve, state) => {
-    let props = {};
+const buildProps = (dataToRetrieve, state, props) => {
+    let newProps = {};
     loopDataToRetrive(dataToRetrieve, (reducer, propReducer, dataToRetrieve) => {
-        props[propReducer] = {
+        newProps[propReducer] = {
             prefix: state[reducer].prefix,
             baseUrl: state[reducer].baseUrl
         };
         let propName = reducer;
         if (dataToRetrieve.propName) propName = dataToRetrieve.propName;
         if (dataToRetrieve.id) {
-            props[propName] = selectOne(state[reducer], dataToRetrieve.id);
+            newProps[propName] = selectOne(state[reducer], dataToRetrieve.id(props));
         } else {
-            props[propName] = select(state[reducer], dataToRetrieve.filter);
+            newProps[propName] = select(state[reducer], dataToRetrieve.filter(props));
         }
     });
-    return props;
+    return newProps;
 };
 
 const buildPropsForComponent = (dataToRetrieve, props) => {
@@ -74,9 +74,9 @@ export default (WrappedComponent, dataToRetrieve) => {
                 const endpointInfo = this.props[propReducer];
                 const actions = restAction(endpointInfo.prefix, endpointInfo.baseUrl);
                 if (dataToRetrieve.id) {
-                    this.props.dispatch(actions.getIfNeeded(dataToRetrieve.id));
+                    this.props.dispatch(actions.getIfNeeded(dataToRetrieve.id(this.props)));
                 } else {
-                    this.props.dispatch(actions.getAllIfNeeded(dataToRetrieve.filter));
+                    this.props.dispatch(actions.getAllIfNeeded(dataToRetrieve.filter(this.props)));
                 }
             });
         }
@@ -89,5 +89,5 @@ export default (WrappedComponent, dataToRetrieve) => {
         dispatch: PropTypes.func.isRequired
     };
 
-    return connect((state) => buildProps(dataToRetrieve, state))(hoc);
+    return connect((state, ownProps) => buildProps(dataToRetrieve, state, ownProps))(hoc);
 }
