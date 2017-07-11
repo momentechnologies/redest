@@ -2,8 +2,8 @@ export default (state, id) => {
     if (state.entities[id]) {
         return false;
     }
-    if (!state.getMeta[id]) {
+    if (!state.meta[id]) {
         return true;
     }
-    return !(state.getMeta[id].isLoading || state.getMeta[id].loadedAt);
+    return !(state.meta[id].isLoading || state.meta[id].loadedAt);
 }

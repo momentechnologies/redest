@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "build": "babel src --out-dir distribution",
+    "dev": "watch \"npm run build\" src/",
     "prepublish": "npm run build",
     "test": "jest",
     "lint": "eslint src/**",
@@ -28,6 +29,7 @@
     "eslint": "^4.2.0",
     "eslint-plugin-react": "^7.1.0",
     "jest": "^20.0.4",
+    "nodemon": "^1.11.0",
     "prop-types": "^15.5.0",
     "react": "^15.4.0",
     "react-redux": "^5.0.0",
@@ -39,6 +41,7 @@
     "react-redux": "^5.0.0"
   },
   "dependencies": {
-    "eslint-plugin-promise": "^3.5.0"
+    "eslint-plugin-promise": "^3.5.0",
+    "remove": "^0.1.5"
   }
 }
