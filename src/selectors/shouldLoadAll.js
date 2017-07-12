@@ -5,5 +5,5 @@ export default (state, filter = null) => {
     if (!state.meta[metaKey]) {
         return true;
     }
-    return !(state.meta[metaKey].isLoading || state.meta[metaKey].loadedAt);
+    return !(state.meta[metaKey].isLoading || state.meta[metaKey].loadedAt || state.meta[metaKey].error);
 }
