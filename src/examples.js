@@ -14,16 +14,19 @@ const componentDataSelect = [
 
 const componentProp = {
     service: {
-        data: {},
-        create: () => {},
-        update: () => {},
-        invalidate: () => {}
-    },
-    service_endpoint: {
-        data: {},
-        create: () => {},
-        update: () => {},
-        invalidate: () => {}
+        data: {
+            id: 1,
+            title: 123,
+            endpointIds: [2, 132, 981],
+            endpoint: {
+                data: {
+                    id: 341
+                },
+                create: () => {}, // when you use this create it will automatically use the id of the parent service
+                update: () => {},
+                invalidate: () => {}
+            }
+        },
     }
 };
 
