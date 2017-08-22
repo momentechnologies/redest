@@ -98,7 +98,7 @@ const create = (types, baseUrl) => (data) => (dispatch) => new Promise((resolve,
 });
 
 const update = (types, baseUrl) => (id, data) => (dispatch) => new Promise((resolve, reject) => {
-    fetch(baseUrl + '/' + id, 'PUT', data).then(
+    fetch(baseUrl + '/' + id, 'POST', data).then(
         (success) => {
             dispatch({
                 type: types.UPDATE,
