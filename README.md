@@ -70,7 +70,7 @@ instance in the state. You can see that we are passing a function which takes a 
 ```JavaScript
 {
   reducer: 'users',
-  id: (props) => props.match.params.id
+  select: (props) => props.match.params.id
 }
 ```
 This will return an object looking like this
@@ -90,7 +90,7 @@ and the second type is to select multiple entities in the state.
 ```JavaScript
 {
   reducer: 'users',
-  filter: (props) => ({
+  select: (props) => ({
       active: props.active
   })
 }
