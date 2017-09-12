@@ -2,20 +2,20 @@ import { selectMetaKey } from './selectors';
 import addPrefix from './addPrefix';
 
 const newInitialState = (prefix, baseUrl) => ({
-        entities: {},
-        meta: {},
-        prefix,
-        baseUrl
-    });
+    entities: {},
+    meta: {},
+    prefix,
+    baseUrl
+});
 
 export const typesCreator = (prefix) => addPrefix(prefix, {
-        LOAD_ALL: 'LOAD_ALL',
-        LOAD_ONE: 'LOAD_ONE',
-        UPDATE: 'UPDATE',
-        CREATE: 'CREATE',
-        DELETE: 'DELETE',
-        INVALIDATE: 'INVALIDATE'
-    });
+    LOAD_ALL: 'LOAD_ALL',
+    LOAD_ONE: 'LOAD_ONE',
+    UPDATE: 'UPDATE',
+    CREATE: 'CREATE',
+    DELETE: 'DELETE',
+    INVALIDATE: 'INVALIDATE'
+});
 
 const defaultReducer = (state, action) => state;
 
