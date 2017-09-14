@@ -1,3 +1,7 @@
 export default {
-    internalPropPrefix: '__redest__'
+    internalPropPrefix: '__redest__',
+    components: {
+        loading: null,
+        error: null
+    }
 };
