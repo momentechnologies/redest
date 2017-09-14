@@ -29,6 +29,7 @@ export default (state, action) => {
                     }
                 },
                 entities: {
+                    ...state.entities,
                     ...action.payload.entities
                 }
             };
