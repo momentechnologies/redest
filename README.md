@@ -74,7 +74,7 @@ instance in the state. You can see that we are passing a function which takes a 
 }
 ```
 This will return an object looking like this
-```javascript
+```json
 {
     entity: Object, 
     meta: {
@@ -96,7 +96,7 @@ and the second type is to select multiple entities in the state.
 }
 ```
 This will return an object looking like this
-```javascript
+```json
 {
     entities: Array, 
     meta: {
