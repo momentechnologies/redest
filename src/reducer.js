@@ -3,8 +3,6 @@ import create from './reducerActions/create';
 import update from './reducerActions/update';
 import remove from './reducerActions/remove';
 import invalidate from './reducerActions/invalidate';
-import loadAll from './reducerActions/loadAll';
-import loadOne from './reducerActions/loadOne';
 import load from './reducerActions/load';
 
 const newInitialState = () => ({

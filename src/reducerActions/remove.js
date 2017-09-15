@@ -1,4 +1,4 @@
-import resetMeta from '../resetMeta';
+import resetMeta from './utils/resetMeta';
 
 export default (state, action) => {
     let newEntities = {...state.entities};

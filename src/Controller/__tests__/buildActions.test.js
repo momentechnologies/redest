@@ -3,9 +3,9 @@ import settings from '../../settings';
 
 describe('buildActions', () => {
     it('should return correct props', () => {
-        const dataToRetrieve = [
-            { reducer: 'users', select: () => 'all' }
-        ];
+        const dataToRetrieve = (props) => ({
+            users: 'all'
+        });
         const props = {
             [settings.internalPropPrefix + 'users']: {
                 prefix: 'users',
@@ -17,8 +17,6 @@ describe('buildActions', () => {
         const response = [
             'users_create',
             'users_get',
-            'users_getAll',
-            'users_getAllIfNeeded',
             'users_getIfNeeded',
             'users_invalidate',
             'users_remove',
