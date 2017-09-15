@@ -1,94 +1,88 @@
 import fetch from './fetch';
-import { typesCreator } from './reducer';
+import { types } from './reducer';
 import {
-    shouldLoadSingle,
-    shouldLoadAll
+    shouldLoad,
+    selectMetaKey
 } from './selectors';
+import { isSingle, isAll, isMultiple } from './selectors/selectMetaKey';
 
-const getIfNeeded = (types, baseUrl, prefix) => (id) => (dispatch, getState) => {
-    if (shouldLoadSingle(getState()[prefix], id)) {
-        dispatch(get(types, baseUrl)(id));
+import getKeyInfo from './Controller/getKeyInfo';
+
+const action = (key, action) => ({
+    ...action,
+    redest: getKeyInfo(key)
+});
+
+const getIfNeeded = (key) => (filter) => (dispatch, getState) => {
+    const info = getKeyInfo(key);
+    if (shouldLoad(getState().redest[info.reducer], filter)) {
+        dispatch(get(key)(filter));
     }
 };
 
-const getAllIfNeeded = (types, baseUrl, prefix) => (filter = null) => (dispatch, getState) => {
-    if (shouldLoadAll(getState()[prefix], filter)) {
-        dispatch(getAll(types, baseUrl)(filter));
-    }
-};
+const get = (key) => (filter) => (dispatch) => {
+    const info = getKeyInfo(key);
+    const metaKey = selectMetaKey(filter);
 
-const getAll = (types, baseUrl) => (filter = null) => (dispatch) => {
-    dispatch({
-        type: types.LOAD_ALL,
+    dispatch(action(key, {
+        type: types.LOAD,
         status: 'start',
         payload: {
-            filter
+            metaKey
         }
-    });
+    }));
 
-    fetch(baseUrl, 'GET', filter).then(
-        (entities) => {
-            let newEntities = {};
-            entities.forEach((entity) => {
-                newEntities[entity.id] = entity;
-            });
-            dispatch({
-                type: types.LOAD_ALL,
+    let url = info.url;
+    let requestData = filter;
+    if (isSingle(filter)) {
+        url += '/' + metaKey;
+        requestData = null;
+    }
+    if (isAll(filter)) requestData = null;
+
+    fetch(url, 'GET', requestData).then(
+        (response) => {
+            let entities = {};
+
+            if (isMultiple(filter)) {
+                entities = response.reduce((acc, entity) => {
+                    acc[entity.id] = entity;
+                    return acc;
+                }, {});
+            } else {
+                entities[response.id] = response;
+            }
+
+            dispatch(action(key, {
+                type: types.LOAD,
                 status: 'success',
                 payload: {
-                    entities: newEntities,
-                    filter
+                    metaKey,
+                    entities
                 }
-            });
+            }));
         },
         (error) => {
-            dispatch({
-                type: types.LOAD_ALL,
+            dispatch(action(key, {
+                type: types.LOAD,
                 status: 'error',
                 payload: {
-                    error,
-                    filter
-                }
-            });
-        }
-    );
-};
-
-const get = (types, baseUrl) => (id) => (dispatch) => {
-    dispatch({
-        type: types.LOAD_ONE,
-        status: 'start',
-        payload: id
-    });
-
-    fetch(baseUrl + '/' + id, 'GET').then(
-        (entity) => {
-            dispatch({
-                type: types.LOAD_ONE,
-                status: 'success',
-                payload: entity
-            });
-        },
-        (error) => {
-            dispatch({
-                type: types.LOAD_ONE,
-                status: 'error',
-                payload: {
-                    id,
+                    metaKey,
                     error
                 }
-            });
+            }));
         }
     );
 };
 
-const create = (types, baseUrl) => (data) => (dispatch) => new Promise((resolve, reject) => {
-    fetch(baseUrl, 'POST', data).then(
+const create = (key) => (data) => (dispatch) => new Promise((resolve, reject) => {
+    const info = getKeyInfo(key);
+    fetch(info.url, 'POST', data).then(
         (success) => {
-            dispatch({
+            dispatch(action(key, {
                 type: types.CREATE,
                 payload: success
-            });
+            }));
             resolve(success);
         },
         (error) => {
@@ -97,13 +91,14 @@ const create = (types, baseUrl) => (data) => (dispatch) => new Promise((resolve,
     );
 });
 
-const update = (types, baseUrl) => (id, data) => (dispatch) => new Promise((resolve, reject) => {
-    fetch(baseUrl + '/' + id, 'POST', data).then(
+const update = (key) => (id, data) => (dispatch) => new Promise((resolve, reject) => {
+    const info = getKeyInfo(key);
+    fetch(info.url + '/' + id, 'POST', data).then(
         (success) => {
-            dispatch({
+            dispatch(action(key, {
                 type: types.UPDATE,
                 payload: success
-            });
+            }));
             resolve(success);
         },
         (error) => {
@@ -112,13 +107,14 @@ const update = (types, baseUrl) => (id, data) => (dispatch) => new Promise((reso
     );
 });
 
-const remove = (types, baseUrl) => (id) => (dispatch) => new Promise((resolve, reject) => {
-    fetch(baseUrl + '/' + id, 'DELETE').then(
+const remove = (key) => (id) => (dispatch) => new Promise((resolve, reject) => {
+    const info = getKeyInfo(key);
+    fetch(info.url + '/' + id, 'DELETE').then(
         (success) => {
-            dispatch({
+            dispatch(action(key, {
                 type: types.DELETE,
                 payload: id
-            });
+            }));
             resolve(success);
         },
         (error) => {
@@ -127,27 +123,25 @@ const remove = (types, baseUrl) => (id) => (dispatch) => new Promise((resolve, r
     );
 });
 
-const invalidate = (types) => () => ({
+const invalidate = (key) => () => (action(key, {
     type: types.INVALIDATE
-});
+}));
 
-const fillActions = (prefix, baseUrl) => {
-    const actions = {
-        getIfNeeded,
-        getAllIfNeeded,
-        get,
-        getAll,
-        create,
-        update,
-        remove,
-        invalidate
-    };
-    const types = typesCreator(prefix);
+const actions = {
+    getIfNeeded,
+    get,
+    create,
+    update,
+    remove,
+    invalidate
+};
+
+const fillActions = (key) => {
     let response = {};
     Object.keys(actions).forEach((actionKey) => {
-        response[actionKey] = actions[actionKey](types, baseUrl, prefix)
+        response[actionKey] = actions[actionKey](key);
     });
     return response;
 };
 
-export default (prefix, baseUrl) => fillActions(prefix, baseUrl)
+export default (key) => fillActions(key)

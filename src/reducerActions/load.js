@@ -1,13 +1,15 @@
 const currentTimestamp = () => new Date().getTime();
 
-export default (state, action) => {
+export default (state = {}, action) => {
+    let key = action.payload.metaKey;
     switch (action.status) {
         case 'start':
             return {
                 ...state,
                 meta: {
                     ...state.meta,
-                    [action.payload]: {
+                    [key]: {
+                        ...state.meta[key],
                         isLoading: true,
                         error: false,
                         loadedAt: null
@@ -19,15 +21,16 @@ export default (state, action) => {
                 ...state,
                 meta: {
                     ...state.meta,
-                    [action.payload.id]: {
+                    [key]: {
                         isLoading: false,
                         error: false,
-                        loadedAt: currentTimestamp()
+                        loadedAt: currentTimestamp(),
+                        ids: Object.keys(action.payload.entities)
                     }
                 },
                 entities: {
                     ...state.entities,
-                    [action.payload.id]: action.payload
+                    ...action.payload.entities
                 }
             };
         case 'error':
@@ -35,10 +38,10 @@ export default (state, action) => {
                 ...state,
                 meta: {
                     ...state.meta,
-                    [action.payload.id]: {
+                    [key]: {
                         isLoading: false,
                         error: action.payload.error,
-                        loadedAt: false
+                        loadedAt: currentTimestamp(),
                     }
                 }
             };
