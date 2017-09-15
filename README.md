@@ -70,7 +70,7 @@ We need to pass a function to the `Redest` wrapper with the data we want it to r
 })
 ```
 This will return an object looking like this
-```json
+```javascript
 {
     entity: Object, 
     meta: {
@@ -97,7 +97,7 @@ or
 })
 ```
 This will return an object looking like this
-```json
+```javascript
 {
     entities: Array, 
     meta: {
