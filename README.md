@@ -15,7 +15,7 @@ In order to use this package you need to have those installed:
 # Installation
 You start by adding this package to your project
 ```
-npm i redest
+npm i redest --save-dev
 ```
 or using yarn
 ```
@@ -24,17 +24,16 @@ yarn add redest
 
 # Getting started
 ## Setup reducer
-Where you define all of your reducers, you should import the reducerSetup module and pass it an array of endpoints you want it to handle. The string you passed here will be used throughout the setup.
+Where you define all of your reducers, you should import the reducerSetup module.
 
-```JavaScript
+```javascript
 import { combineReducers } from 'redux';
 import { reducerSetup } from 'redest';
 
 export combineReducers({
-    ...storeSetup(['users', 'repos'])
+    ...storeSetup()
 });
 ```
-That's it. you now have a two new stores(users and repos) will all the Rest capabilities.
 
 ## Access the data and modify it
 ```javascript
@@ -69,7 +68,7 @@ We need to pass a function to the `Redest` wrapper with the data we want it to r
     users: props.match.params.id
 })
 ```
-This will return an object looking like this
+This will return an object looking like this under `this.props.users`
 ```javascript
 {
     entity: Object, 
@@ -108,6 +107,34 @@ This will return an object looking like this
     }
 }
 ```
+
+# What endpoints are called with different parameters?
+1. multiple entities ('all' or object) `/api/{endpoint}` with all parameters in the object as get parameters
+2. on entity `/api/{endpoint}/{entity id}`
+
+## Actions passed in props
+in addition to the get function we have multiple functions passed to the wrapped component. Here are all of them and what they do:
+1. `this.props.{endpoint}_create`: this is a function that takes one parameter and returns a promise. It will make a post request to `/api/{endpoint}` with the data:
+```javascript
+({
+    name: 'Max Moeschinger',
+    age: 23
+}).then(
+    (success) => {},
+    (error) => {},
+);
+```
+2. `this.props.{endpoint}_update`: this is a function that takes two parameter, the record id to update and the data, and returns a promise. It will make a post request to `/api/{endpoint}/{id}` with the data:
+```javascript
+(1, {
+    name: 'Max Moeschinger',
+    age: 23
+}).then(
+    (success) => {},
+    (error) => {},
+);
+```
+
 
 # Contributing
 All contribution is welcomed. Just create a pull request and we will review it.
