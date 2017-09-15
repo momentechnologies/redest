@@ -37,7 +37,7 @@ export combineReducers({
 That's it. you now have a two new stores(users and repos) will all the Rest capabilities.
 
 ## Access the data and modify it
-```JavaScript
+```javascript
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redest } from 'redest';
@@ -67,14 +67,14 @@ We need to pass an array to the `Redest` wrapper with the data we want it to ret
 There is two different type of object you can pass to it. The first one will select a single 
 instance in the state. You can see that we are passing a function which takes a `props` parameter.
 
-```JavaScript
+```javascript
 {
   reducer: 'users',
   select: (props) => props.match.params.id
 }
 ```
 This will return an object looking like this
-```JavaScript
+```javascript
 {
     entity: Object, 
     meta: {
@@ -87,7 +87,7 @@ This will return an object looking like this
 ```
 
 and the second type is to select multiple entities in the state.
-```JavaScript
+```javascript
 {
   reducer: 'users',
   select: (props) => ({
@@ -96,7 +96,7 @@ and the second type is to select multiple entities in the state.
 }
 ```
 This will return an object looking like this
-```JavaScript
+```javascript
 {
     entities: Array, 
     meta: {
