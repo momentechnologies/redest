@@ -1,5 +1,6 @@
-export default (dataToRetrieve, callback) => {
-    dataToRetrieve.forEach((dataToRetrieve) => {
-        callback(dataToRetrieve.reducer, dataToRetrieve.select);
+export default (retrieveData, props, callback) => {
+    const data = retrieveData(props);
+    Object.keys(data).forEach((key) => {
+        callback(key, data[key]);
     });
 };

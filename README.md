@@ -59,19 +59,15 @@ Component.propTypes = {
     users_create: PropTypes.func.isRequired
 };
 
-export default Redest(Component, [{ reducer: 'users' }]);
+export default Redest(Component, (props) => ({ users: props.match.params.id}));
 ```
 
-We need to pass an array to the `Redest` wrapper with the data we want it to return.
-
-There is two different type of object you can pass to it. The first one will select a single 
-instance in the state. You can see that we are passing a function which takes a `props` parameter.
+We need to pass a function to the `Redest` wrapper with the data we want it to return. Under is a couple of examples
 
 ```javascript
-{
-  reducer: 'users',
-  select: (props) => props.match.params.id
-}
+(props) => ({
+    users: props.match.params.id
+})
 ```
 This will return an object looking like this
 ```json
@@ -88,12 +84,17 @@ This will return an object looking like this
 
 and the second type is to select multiple entities in the state.
 ```javascript
-{
-  reducer: 'users',
-  select: (props) => ({
-      active: props.active
-  })
-}
+(props) => ({
+    users: {
+        active: props.active
+    }
+})
+```
+or 
+```javascript
+(props) => ({
+    users: 'all'
+})
 ```
 This will return an object looking like this
 ```json
