@@ -23,8 +23,8 @@ export default (WrappedComponent, dataToRetrieve) => {
         }
         check() {
             if (this.props[settings.internalPropPrefix + 'error']) return;
-            loopDataToRetrive(dataToRetrieve, this.props, (key, filter) => {
-                this.props.dispatch(restAction(key).getIfNeeded(filter));
+            loopDataToRetrive(dataToRetrieve, this.props, (info) => {
+                this.props.dispatch(restAction(info).getIfNeeded(info.filter));
             });
         }
         render() {

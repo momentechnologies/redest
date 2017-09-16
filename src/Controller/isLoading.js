@@ -4,10 +4,10 @@ const isLoading = (meta) => meta.isLoading || !meta.loadedAt;
 
 export default (dataToRetrieve, props) => {
     let loading = false;
-    loopDataToRetrive(dataToRetrieve, props, (reducer) => {
+    loopDataToRetrive(dataToRetrieve, props, (info) => {
         if (!loading) {
-            const meta = props[reducer].meta;
-            loading = meta ? isLoading(props[reducer].meta) : true;
+            const meta = props[info.reducer].meta;
+            loading = meta ? isLoading(props[info.reducer].meta) : true;
         }
     });
     return loading;
