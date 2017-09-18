@@ -1,8 +1,7 @@
-import select from '../select';
 import selectMeta from '../selectMeta';
 
-describe('select', () => {
-    it('should return correct data', () => {
+describe('selectMeta', () => {
+    it('should return the correct meta', () => {
         const state = {
             entities: {
                 1: {
@@ -30,29 +29,29 @@ describe('select', () => {
         const tests = [
             {
                 filter: 'all',
-                response: {
-                    entities: [state.entities[1], state.entities[2], state.entities[3]],
-                    meta: selectMeta(state, 'all')
-                }
+                response: state.meta.all
             },
             {
                 filter: 1,
-                response: {
-                    entity: state.entities[1],
-                    meta: selectMeta(state, 1)
-                }
+                response: state.meta.all
             },
             {
                 filter: 2,
+                response: state.meta['2']
+            },
+            {
+                filter: 4,
                 response: {
-                    entity: state.entities[2],
-                    meta: selectMeta(state, 2)
+                    isLoading: false,
+                    loadedAt: false,
+                    error: false,
+                    ids: []
                 }
             }
         ];
 
         tests.forEach((test) => {
-            expect(select(state, test.filter)).toEqual(test.response);
-        })
+            expect(selectMeta(state, test.filter)).toEqual(test.response);
+        });
     });
 });

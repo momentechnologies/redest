@@ -1,20 +1,25 @@
 import selectMetaKey from '../selectMetaKey';
 
-test('"selectMetaKey" creates the right key', () => {
-    const filters = {
-        active: true,
-        published: true
-    };
+describe('selectMetaKey', () => {
+    it('should create the right key', () => {
+        const filters = {
+            active: true,
+            published: true
+        };
+        const response = 'active_true_published_true';
 
-    const response = 'active_true_published_true';
+        expect(selectMetaKey(filters)).toEqual(response);
+    });
 
-    expect(selectMetaKey(filters)).toEqual(response);
-});
+    it('should create all key', () => {
+        expect(selectMetaKey(null)).toEqual('all');
+    });
 
-test('"selectMetaKey" creates all key', () => {
-    const filters = null;
+    it('should create all key', () => {
+        expect(selectMetaKey('all')).toEqual('all');
+    });
 
-    const response = 'all';
-
-    expect(selectMetaKey(filters)).toEqual(response);
+    it('should create single key', () => {
+        expect(selectMetaKey(1)).toEqual(1);
+    });
 });

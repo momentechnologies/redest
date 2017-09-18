@@ -7,7 +7,7 @@
   "author": "Max Moeschinger <m.moeschinger@sportradar.com>",
   "license": "MIT",
   "scripts": {
-    "build": "babel src --out-dir distribution",
+    "build": "babel src --ignore __tests__ --out-dir distribution",
     "dev": "watch \"npm run build\" src/",
     "prepublish": "npm run build",
     "test": "jest",
