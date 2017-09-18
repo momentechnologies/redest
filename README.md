@@ -44,11 +44,9 @@ import { Redest } from 'redest';
 const Component = (props) => {
     return (
         <div 
-            onClick={() => {
-                props.users_create({ name: 'Max Moeschinger'})
-            }}
+            onClick={() => props.users_create({ name: 'Max Moeschinger'})}
         >
-            test
+            Create new user
         </div>
     )
 };
