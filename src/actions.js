@@ -2,37 +2,44 @@ import fetch from './fetch';
 import { types } from './reducer';
 import {
     shouldLoad,
+    shouldLoadRaw,
     selectMetaKey
 } from './selectors';
 import { isSingle, isAll, isMultiple } from './selectors/selectMetaKey';
 
-import getKeyInfo from './Controller/getKeyInfo';
-
-const action = (key, action) => ({
+const action = (info, action) => ({
     ...action,
-    redest: getKeyInfo(key)
+    redest: {
+        reducer: info.reducer,
+        raw: info.raw
+    }
 });
 
-const getIfNeeded = (key) => (filter) => (dispatch, getState) => {
-    const info = getKeyInfo(key);
-    if (shouldLoad(getState().redest[info.reducer], filter)) {
-        dispatch(get(key)(filter));
+const getIfNeeded = (info) => (filter) => (dispatch, getState) => {
+    if (info.raw) {
+        if (shouldLoadRaw(getState().redest[info.reducer], filter)) {
+            dispatch(get(info)(filter));
+        }
+    } else {
+        if (shouldLoad(getState().redest[info.reducer], filter)) {
+            dispatch(get(info)(filter));
+        }
     }
 };
 
-const get = (key) => (filter) => (dispatch) => {
-    const info = getKeyInfo(key);
+const get = (info) => (filter) => (dispatch) => {
     const metaKey = selectMetaKey(filter);
+    const type = info.raw ? types.LOAD_RAW : types.LOAD;
 
-    dispatch(action(key, {
-        type: types.LOAD,
+    dispatch(action(info, {
+        type,
         status: 'start',
         payload: {
             metaKey
         }
     }));
 
-    let url = info.url;
+    let url = info.endpoint;
     let requestData = filter;
     if (isSingle(filter)) {
         url += '/' + metaKey;
@@ -42,29 +49,40 @@ const get = (key) => (filter) => (dispatch) => {
 
     fetch(url, 'GET', requestData).then(
         (response) => {
-            let entities = {};
-
-            if (isMultiple(filter)) {
-                entities = response.reduce((acc, entity) => {
-                    acc[entity.id] = entity;
-                    return acc;
-                }, {});
+            if (info.raw) {
+                dispatch(action(info, {
+                    type,
+                    status: 'success',
+                    payload: {
+                        metaKey,
+                        data: response
+                    }
+                }));
             } else {
-                entities[response.id] = response;
-            }
+                let entities = {};
 
-            dispatch(action(key, {
-                type: types.LOAD,
-                status: 'success',
-                payload: {
-                    metaKey,
-                    entities
+                if (isMultiple(filter)) {
+                    entities = response.reduce((acc, entity) => {
+                        acc[entity.id] = entity;
+                        return acc;
+                    }, {});
+                } else {
+                    entities[response.id] = response;
                 }
-            }));
+
+                dispatch(action(info, {
+                    type,
+                    status: 'success',
+                    payload: {
+                        metaKey,
+                        entities
+                    }
+                }));
+            }
         },
         (error) => {
-            dispatch(action(key, {
-                type: types.LOAD,
+            dispatch(action(info, {
+                type,
                 status: 'error',
                 payload: {
                     metaKey,
@@ -75,11 +93,10 @@ const get = (key) => (filter) => (dispatch) => {
     );
 };
 
-const create = (key) => (data) => (dispatch) => new Promise((resolve, reject) => {
-    const info = getKeyInfo(key);
-    fetch(info.url, 'POST', data).then(
+const create = (info) => (data) => (dispatch) => new Promise((resolve, reject) => {
+    fetch(info.endpoint, 'POST', data).then(
         (success) => {
-            dispatch(action(key, {
+            dispatch(action(info, {
                 type: types.CREATE,
                 payload: success
             }));
@@ -91,11 +108,10 @@ const create = (key) => (data) => (dispatch) => new Promise((resolve, reject) =>
     );
 });
 
-const update = (key) => (id, data) => (dispatch) => new Promise((resolve, reject) => {
-    const info = getKeyInfo(key);
-    fetch(info.url + '/' + id, 'POST', data).then(
+const update = (info) => (id, data) => (dispatch) => new Promise((resolve, reject) => {
+    fetch(info.endpoint + '/' + id, 'POST', data).then(
         (success) => {
-            dispatch(action(key, {
+            dispatch(action(info, {
                 type: types.UPDATE,
                 payload: success
             }));
@@ -107,11 +123,10 @@ const update = (key) => (id, data) => (dispatch) => new Promise((resolve, reject
     );
 });
 
-const remove = (key) => (id) => (dispatch) => new Promise((resolve, reject) => {
-    const info = getKeyInfo(key);
-    fetch(info.url + '/' + id, 'DELETE').then(
+const remove = (info) => (id) => (dispatch) => new Promise((resolve, reject) => {
+    fetch(info.endpoint + '/' + id, 'DELETE').then(
         (success) => {
-            dispatch(action(key, {
+            dispatch(action(info, {
                 type: types.DELETE,
                 payload: id
             }));
@@ -123,7 +138,7 @@ const remove = (key) => (id) => (dispatch) => new Promise((resolve, reject) => {
     );
 });
 
-const invalidate = (key) => () => (action(key, {
+const invalidate = (info) => () => (action(info, {
     type: types.INVALIDATE
 }));
 
@@ -136,12 +151,12 @@ const actions = {
     invalidate
 };
 
-const fillActions = (key) => {
+const fillActions = (info) => {
     let response = {};
     Object.keys(actions).forEach((actionKey) => {
-        response[actionKey] = actions[actionKey](key);
+        response[actionKey] = actions[actionKey](info);
     });
     return response;
 };
 
-export default (key) => fillActions(key)
+export default (info) => fillActions(info)
