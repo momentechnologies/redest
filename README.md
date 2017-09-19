@@ -35,102 +35,121 @@ export combineReducers({
 });
 ```
 
-## Access the data and modify it
+## Setup your component
+In order to fetch and use the data you need to wrap your component with `Redest` and pass your component as the first
+argument and a function which takes a props argument as the second argument. This function will from this point on be
+called the `selector function`. Under is an example of the Redest wrapper.
 ```javascript
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Redest } from 'redest';
 
-const Component = (props) => {
-    return (
-        <div 
-            onClick={() => props.users_create({ name: 'Max Moeschinger'})}
-        >
-            Create new user
-        </div>
-    )
-};
-
-Component.propTypes = {
-    users: PropTypes.object.isRequired,
-    users_create: PropTypes.func.isRequired
-};
+... 
 
 export default Redest(Component, (props) => ({ users: props.match.params.id}));
 ```
 
-We need to pass a function to the `Redest` wrapper with the data we want it to return. Under is a couple of examples
+## The Selector function
+this function takes a props argument so that you can decide what data you want to access. It returns an object where
+each entries represent data that you want to retrieve. There are multiple format supported and under are explanations
+on all the different types of objects you can return.
 
-```javascript
-(props) => ({
-    users: props.match.params.id
-})
+### Get all
+Let's say you want to retrieve all users.
 ```
-This will return an object looking like this under `this.props.users`
-```javascript
 {
-    entity: Object, 
+    'users': 'all'
+}
+```
+This will make a GET request to `/users` endpoint.
+
+### Get all with parameters
+For example if you want to get all female users.
+```
+{
+    'users': {
+        filter: {
+            gender: 'female'
+        }
+    }
+}
+```
+This will make a GET request to `/users?gender=female` endpoint.
+
+### Get single entry
+For example if you want to get a single user.
+```
+{
+    'users': 1
+}
+```
+This will make a GET request to `/users/1` endpoint.
+
+### Extra parameters
+If you need to customize some part of the request made in redest you can do so here as well. There is three extra 
+parameter you can pass to it. Under is what they default to internally if you do not pass them. Endpoint and reducer
+is calculated from the object key.
+```
+{
+    'users': {
+        endpoint: '/users',
+        reducer: 'users,
+        raw: false
+    }
+}
+```
+#### Object Key
+The key of the object is used for creating the props name that Redest passes to the component.
+
+#### Endpoint
+Endpoint parameter will be used as url when making the call to your backend
+
+#### Reducer
+The name of the reducer we are going to use internally to store the data.
+
+#### Raw
+Internally Redest will automatically normalize your data. This is an option to disable that.
+
+## Accessing the data in your props
+Let's says you have setup your selector function to retrieve `users`. This means you will have a prop in your 
+component called `this.props.users`.
+
+### Select multiple users
+If you have decided to retrieve multiple users entities the `this.props.users` variable will have this structure:
+```
+{
+    entities: [],
     meta: {
-        error:false,
-        ids: [],
         isLoading: false,
-        loadedAt: 1499797369337
+        loadedAt: 10923874,
+        error: false,
+        ids: []
     }
 }
 ```
 
-and the second type is to select multiple entities in the state.
-```javascript
-(props) => ({
-    users: {
-        active: props.active
-    }
-})
+### Select single user
+If you have decided to retrieve one user the `this.props.users` variable will have this structure:
 ```
-or 
-```javascript
-(props) => ({
-    users: 'all'
-})
-```
-This will return an object looking like this
-```javascript
 {
-    entities: Array, 
+    entity: {},
     meta: {
-        error:false,
-        ids: [],
         isLoading: false,
-        loadedAt: 1499797369337
+        loadedAt: 10923874,
+        error: false
     }
 }
 ```
 
-# What endpoints are called with different parameters?
-1. multiple entities ('all' or object) `/api/{endpoint}` with all parameters in the object as get parameters
-2. on entity `/api/{endpoint}/{entity id}`
-
-## Actions passed in props
-in addition to the get function we have multiple functions passed to the wrapped component. Here are all of them and what they do:
-1. `this.props.{endpoint}_create`: this is a function that takes one parameter and returns a promise. It will make a post request to `/api/{endpoint}` with the data:
-```javascript
-({
-    name: 'Max Moeschinger',
-    age: 23
-}).then(
-    (success) => {},
-    (error) => {},
-);
+### Select raw data
+If you have decided to retrieve data with `raw = true` the `this.props.users` variable will have this structure:
 ```
-2. `this.props.{endpoint}_update`: this is a function that takes two parameter, the record id to update and the data, and returns a promise. It will make a post request to `/api/{endpoint}/{id}` with the data:
-```javascript
-(1, {
-    name: 'Max Moeschinger',
-    age: 23
-}).then(
-    (success) => {},
-    (error) => {},
-);
+{
+    data: {},
+    meta: {
+        isLoading: false,
+        loadedAt: 10923874,
+        error: false
+    }
+}
 ```
 
 
