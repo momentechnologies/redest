@@ -19,4 +19,4 @@ export default (state, action) => {
         entities: newEntities,
         meta: newMeta
     };
-}
+};

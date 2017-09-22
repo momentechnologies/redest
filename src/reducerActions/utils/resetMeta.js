@@ -1,10 +1,9 @@
-export default (meta) => {
-    let newGetMeta = {};
-    Object.keys(meta).forEach((getKey) => {
-        newGetMeta[getKey] = {
+export default (meta) => Object.keys(meta).reduce((acc, getKey) => {
+    return {
+        ...acc,
+        [getKey]: {
             ...meta[getKey],
             loadedAt: false
         }
-    });
-    return newGetMeta
-};
+    };
+}, {});

@@ -7,4 +7,4 @@ export default (state, action) => ({
         [action.payload.id]: action.payload
     },
     meta: resetMeta(state.meta)
-})
+});
