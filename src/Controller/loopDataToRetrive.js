@@ -20,13 +20,3 @@ export default (retrieveData, props, callback) => {
         callback(info);
     });
 };
-
-const testSetup = (props) => ({
-    users: {
-        filter: {}
-    },
-    chargeSetup: {
-        raw: true,
-        endpoint: ''
-    }
-});
