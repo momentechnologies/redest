@@ -25,7 +25,7 @@ export default (state = {}, action) => {
                         isLoading: false,
                         error: false,
                         loadedAt: currentTimestamp(),
-                        ids: Object.keys(action.payload.entities).map((id) => parseInt(id, 10))
+                        ids: action.payload.ids
                     }
                 },
                 entities: {

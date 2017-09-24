@@ -60,14 +60,17 @@ const get = (info) => (filter) => (dispatch) => {
                 }));
             } else {
                 let entities = {};
+                let ids = [];
 
                 if (isMultiple(filter)) {
                     entities = response.reduce((acc, entity) => {
                         acc[entity.id] = entity;
+                        ids.push(entity.id);
                         return acc;
                     }, {});
                 } else {
                     entities[response.id] = response;
+                    ids.push(response.id);
                 }
 
                 dispatch(action(info, {
@@ -75,7 +78,8 @@ const get = (info) => (filter) => (dispatch) => {
                     status: 'success',
                     payload: {
                         metaKey,
-                        entities
+                        entities,
+                        ids
                     }
                 }));
             }
