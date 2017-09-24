@@ -16,15 +16,15 @@ export default (WrappedComponent, dataToRetrieve) => {
             this.state = {};
         }
         componentWillMount() {
-            this.check();
+            this.check(this.props);
         }
-        componentWillUpdate() {
-            this.check();
+        componentWillReceiveProps(nextProps) {
+            this.check(nextProps);
         }
-        check() {
-            if (this.props[settings.internalPropPrefix + 'error']) return;
-            loopDataToRetrive(dataToRetrieve, this.props, (info) => {
-                this.props.dispatch(restAction(info).getIfNeeded(info.filter));
+        check(props) {
+            if (props[settings.internalPropPrefix + 'error']) return;
+            loopDataToRetrive(dataToRetrieve, props, (info) => {
+                props.dispatch(restAction(info).getIfNeeded(info.filter));
             });
         }
         render() {
