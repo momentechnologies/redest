@@ -19,26 +19,34 @@ export default (url, method = 'GET', data = null) => new Promise((resolve, rejec
     }
 
     fetch('/api' + url, fetchData)
-        .then(handleErrors(reject))
+        .then((response) => {
+            if (!response.ok) {
+                throw {
+                    uid: 0,
+                    message: 'Something went wrong',
+                    extra: {}
+                };
+            }
+            return response;
+        })
         .then((response) => response.json())
         .then((json) => {
-            resolve(json);
+            if (!json.success) {
+                throw json;
+            }
+            resolve(json.data);
         })
         .catch((error) => {
             reject(error);
         });
 });
 
-const handleErrors = (reject) => (response) => {
-    if (!response.ok) {
-        return response.json().then(
-            (success) => {
-                reject(success);
-            },
-            () => {
-                reject(response.statusText);
-            }
-        );
-    }
-    return response;
+export const errorCodes = {
+    FATAL: 0,
+    ALREADY_EXISTS: 1,
+    INVALID_REQUEST: 2,
+    NOT_FOUND: 3,
+    PARAMETER_MISSING: 4,
+    UNAUTHORIZED: 5,
+    VALIDATION: 6
 };
