@@ -5,7 +5,8 @@ export default (retrieveData, props, callback) => {
             endpoint: '/' + key,
             reducer: key,
             raw: false,
-            filter: null
+            filter: null,
+            onlyActions: false
         };
 
         if (data[key] && typeof data[key] === 'object') {

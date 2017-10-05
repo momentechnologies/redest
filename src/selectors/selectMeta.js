@@ -5,7 +5,10 @@ export default (state, filter = null) => {
     const metaKey = selectMetaKey(filter);
     if (!state || !state.meta) return newMeta();
     if (isSingle(filter) && state.entities[metaKey]) {
-        const metaWithId = Object.keys(state.meta).find((currentMetaKey) => state.meta[currentMetaKey].ids.indexOf(filter) !== -1);
+        const metaWithId = Object.keys(state.meta).find((currentMetaKey) => {
+            if (!state.meta[currentMetaKey].ids) return false;
+            return state.meta[currentMetaKey].ids.indexOf(filter) !== -1
+        });
         if (metaWithId) return state.meta[metaWithId];
         return newMeta();
     }

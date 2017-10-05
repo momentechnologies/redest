@@ -24,6 +24,7 @@ export default (WrappedComponent, dataToRetrieve) => {
         check(props) {
             if (props[settings.internalPropPrefix + 'error']) return;
             loopDataToRetrive(dataToRetrieve, props, (info) => {
+                if (info.onlyActions) return;
                 props.dispatch(restAction(info).getIfNeeded(info.filter));
             });
         }
