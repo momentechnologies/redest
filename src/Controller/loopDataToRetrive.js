@@ -12,6 +12,7 @@ export default (retrieveData, props, callback) => {
         if (data[key] && typeof data[key] === 'object') {
             if (data[key].endpoint) info.endpoint = data[key].endpoint;
             if (data[key].reducer) info.reducer = data[key].reducer;
+            if (data[key].onlyActions) info.onlyActions = data[key].onlyActions;
             if (data[key].raw === true) info.raw = true;
             info.filter = data[key].filter;
         } else {
