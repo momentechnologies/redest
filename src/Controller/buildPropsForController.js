@@ -6,9 +6,9 @@ export default (dataToRetrieve, state, props) => {
     loopDataToRetrive(dataToRetrieve, props, (info) => {
         if (info.onlyActions) return;
         if (info.raw) {
-            newProps[info.reducer] = selectRaw(state.redest[info.reducer], info.filter);
+            newProps[info.reducer] = selectRaw(state, info);
         } else {
-            newProps[info.reducer] = select(state.redest[info.reducer], info.filter);
+            newProps[info.reducer] = select(state, info);
         }
     });
 

@@ -17,11 +17,11 @@ const action = (info, action) => ({
 
 const getIfNeeded = (info) => (filter) => (dispatch, getState) => {
     if (info.raw) {
-        if (shouldLoadRaw(getState().redest[info.reducer], filter)) {
+        if (shouldLoadRaw(getState(), info)) {
             dispatch(get(info)(filter));
         }
     } else {
-        if (shouldLoad(getState().redest[info.reducer], filter)) {
+        if (shouldLoad(getState(), info)) {
             dispatch(get(info)(filter));
         }
     }

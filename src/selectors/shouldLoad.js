@@ -1,6 +1,7 @@
+import { createSelector } from 'reselect';
 import selectMeta from './selectMeta';
 
-export default (state, filter = null) => {
-    const meta = selectMeta(state, filter);
-    return !(meta.isLoading || meta.loadedAt || meta.error);
-}
+export default createSelector(
+    (state, info) => selectMeta(state, info),
+    (meta) => !(meta.isLoading || meta.loadedAt || meta.error)
+)

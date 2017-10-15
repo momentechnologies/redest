@@ -33,12 +33,14 @@
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-redux": "^5.0.6",
-    "regenerator-runtime": "^0.11.0"
+    "regenerator-runtime": "^0.11.0",
+    "reselect": "^3.0.1"
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
-    "react-redux": "^5.0.6"
+    "react-redux": "^5.0.6",
+    "reselect": "^3.0.1"
   },
   "dependencies": {
     "eslint-plugin-promise": "^3.5.0",

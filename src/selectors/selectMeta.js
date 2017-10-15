@@ -1,17 +1,23 @@
+import { createSelector } from 'reselect';
 import selectMetaKey, { isSingle } from './selectMetaKey';
 import newMeta from '../reducerActions/utils/newMeta';
 
-export default (state, filter = null) => {
-    const metaKey = selectMetaKey(filter);
-    if (!state || !state.meta) return newMeta();
-    if (isSingle(filter) && state.entities[metaKey]) {
-        const metaWithId = Object.keys(state.meta).find((currentMetaKey) => {
-            if (!state.meta[currentMetaKey].ids) return false;
-            return state.meta[currentMetaKey].ids.indexOf(filter) !== -1
-        });
-        if (metaWithId) return state.meta[metaWithId];
-        return newMeta();
+export default createSelector(
+    (state, info) => state.redest[info.reducer],
+    (state, info) => info,
+    (reducerState, info = null) => {
+        const filter = info ? info.filter : null;
+        const metaKey = selectMetaKey(filter);
+        if (!reducerState || !reducerState.meta) return newMeta();
+        if (isSingle(filter) && reducerState.entities[metaKey]) {
+            const metaWithId = Object.keys(reducerState.meta).find((currentMetaKey) => {
+                if (!reducerState.meta[currentMetaKey].ids) return false;
+                return reducerState.meta[currentMetaKey].ids.indexOf(filter) !== -1
+            });
+            if (metaWithId) return reducerState.meta[metaWithId];
+            return newMeta();
+        }
+        if (!reducerState.meta[metaKey]) return newMeta();
+        return reducerState.meta[metaKey];
     }
-    if (!state.meta[metaKey]) return newMeta();
-    return state.meta[metaKey];
-}
+);

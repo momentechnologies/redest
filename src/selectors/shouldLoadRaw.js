@@ -1,6 +1,8 @@
+import { createSelector } from 'reselect';
 import selectMetaRaw from './selectMetaRaw';
 
-export default (state, filter = null) => {
-    const meta = selectMetaRaw(state, filter);
-    return !(meta.isLoading || meta.loadedAt || meta.error);
-}
+export default createSelector(
+    (state, info) => state.redest[info.reducer],
+    (state, info) => selectMetaRaw(state, info),
+    (state, meta) => !(meta.isLoading || meta.loadedAt || meta.error)
+);
