@@ -20,7 +20,7 @@ export default (url, method = 'GET', data = null) => new Promise((resolve, rejec
 
     fetch('/api' + url, fetchData)
         .then((response) => {
-            if (!response.ok) {
+            if (!response.ok && response.status >= 500) {
                 throw {
                     uid: 0,
                     message: 'Something went wrong',
@@ -36,7 +36,17 @@ export default (url, method = 'GET', data = null) => new Promise((resolve, rejec
             }
             resolve(json.data);
         })
-        .catch((error) => {
+        .catch((thrownError) => {
+            let error = {
+                uid: 0,
+                message: 'Something went wrong',
+                extra: {}
+            };
+            if (thrownError) {
+                if (thrownError.uid) error.uid = thrownError.uid;
+                if (thrownError.message) error.message = thrownError.message;
+                if (thrownError.extra) error.extra = thrownError.extra;
+            }
             reject(error);
         });
 });
