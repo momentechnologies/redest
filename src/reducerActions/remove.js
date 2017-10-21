@@ -6,7 +6,7 @@ export default (state, action) => {
 
     let newMeta = {...state.meta};
     Object.keys(state.meta).forEach((meta) => {
-        if (newMeta[meta].ids.indexOf(idToDelete) !== -1) {
+        if (newMeta[meta].ids && newMeta[meta].ids.indexOf(idToDelete) !== -1) {
             newMeta[meta] = {
                 ...newMeta[meta],
                 ids: [...newMeta[meta].ids].filter((id) => idToDelete !== id)
