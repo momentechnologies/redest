@@ -1,6 +1,6 @@
 {
   "name": "redest",
-  "version": "2.6.1",
+  "version": "2.7.0",
   "description": "Rest Api communication made easy",
   "main": "distribution/index.js",
   "repository": "git@github.com:momentechnologies/redest.git",
