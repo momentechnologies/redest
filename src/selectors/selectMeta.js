@@ -7,17 +7,29 @@ export default createSelector(
     (state, info) => info,
     (reducerState, info = null) => {
         const filter = info ? info.filter : null;
-        const metaKey = selectMetaKey(filter);
+        const metaKey = selectMetaKey(info);
+
+        // If stuff are not set
         if (!reducerState || !reducerState.meta) return newMeta();
-        if (isSingle(filter) && reducerState.entities[metaKey]) {
-            const metaWithId = Object.keys(reducerState.meta).find((currentMetaKey) => {
+
+        // Search By meta key first and return if found
+        if (reducerState.meta[metaKey]) return reducerState.meta[metaKey];
+
+        // If single look for matching ids
+        if (isSingle(filter) && reducerState.entities[filter]) {
+            const metaWithId = Object.keys(
+                reducerState.meta
+            ).find(currentMetaKey => {
                 if (!reducerState.meta[currentMetaKey].ids) return false;
-                return reducerState.meta[currentMetaKey].ids.indexOf(filter) !== -1
+                return (
+                    reducerState.meta[currentMetaKey].ids.indexOf(filter) !== -1
+                );
             });
             if (metaWithId) return reducerState.meta[metaWithId];
             return newMeta();
         }
-        if (!reducerState.meta[metaKey]) return newMeta();
-        return reducerState.meta[metaKey];
+
+        // fallback
+        return newMeta();
     }
 );

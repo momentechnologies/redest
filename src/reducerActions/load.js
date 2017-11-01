@@ -12,9 +12,8 @@ export default (state = {}, action) => {
                         ...state.meta[key],
                         isLoading: true,
                         error: false,
-                        loadedAt: null
-                    }
-                }
+                    },
+                },
             };
         case 'success':
             return {
@@ -25,13 +24,13 @@ export default (state = {}, action) => {
                         isLoading: false,
                         error: false,
                         loadedAt: currentTimestamp(),
-                        ids: action.payload.ids
-                    }
+                        ids: action.payload.ids,
+                    },
                 },
                 entities: {
                     ...state.entities,
-                    ...action.payload.entities
-                }
+                    ...action.payload.entities,
+                },
             };
         case 'error':
             return {
@@ -42,8 +41,8 @@ export default (state = {}, action) => {
                         isLoading: false,
                         error: action.payload.error,
                         loadedAt: currentTimestamp(),
-                    }
-                }
+                    },
+                },
             };
         default:
             return state;

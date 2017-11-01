@@ -9,54 +9,85 @@ import hasErrors from './hasErrors';
 import restAction from '../actions';
 import settings from '../settings';
 
-export default (WrappedComponent, dataToRetrieve) => {
+const defaultSettings = {
+    autoHandleError: true,
+    autoHandleLoading: true,
+};
+
+export default (WrappedComponent, dataToRetrieve, componentSettings = {}) => {
+    componentSettings = {
+        ...defaultSettings,
+        ...componentSettings,
+    };
     class Controller extends React.Component {
         constructor(props) {
             super(props);
             this.state = {};
         }
+
         componentWillMount() {
             this.check(this.props);
         }
+
         componentWillReceiveProps(nextProps) {
             this.check(nextProps);
         }
+
         check(props) {
             if (props[settings.internalPropPrefix + 'error']) return;
-            loopDataToRetrive(dataToRetrieve, props, (info) => {
+
+            loopDataToRetrive(dataToRetrieve, props, info => {
                 if (info.onlyActions) return;
-                props.dispatch(restAction(info).getIfNeeded(info.filter));
+                props.dispatch(restAction(info).getIfNeeded());
             });
         }
+
         render() {
+            let error = false;
+            let loading = false;
+
             if (this.props[settings.internalPropPrefix + 'error']) {
-                return (
-                    <div>
-                        error
-                    </div>
-                );
+                return <div>error</div>;
             }
-            if (settings.components.error && hasErrors(dataToRetrieve, this.props)) {
-                return (
-                    <settings.components.error/>
-                );
+
+            if (hasErrors(dataToRetrieve, this.props)) {
+                if (
+                    componentSettings.autoHandleError &&
+                    settings.components.error
+                ) {
+                    return <settings.components.error />;
+                }
+
+                error = true;
             }
-            if (settings.components.loading && isLoading(dataToRetrieve, this.props)) {
-                return (
-                    <settings.components.loading/>
-                );
+
+            if (isLoading(dataToRetrieve, this.props)) {
+                if (
+                    componentSettings.autoHandleLoading &&
+                    settings.components.loading
+                ) {
+                    return <settings.components.loading />;
+                }
+
+                loading = true;
             }
+
             return (
                 <WrappedComponent
-                    {...buildPropsForComponent(dataToRetrieve, this.props)}
+                    {...buildPropsForComponent(dataToRetrieve, this.props, {
+                        error,
+                        loading,
+                    })}
                 />
             );
         }
     }
 
     Controller.propTypes = {
-        dispatch: PropTypes.func.isRequired
+        dispatch: PropTypes.func.isRequired,
     };
 
-    return connect((state, ownProps) => buildPropsForController(dataToRetrieve, state, ownProps))(Controller);
-}
+    return connect((state, ownProps) =>
+        buildPropsForController(dataToRetrieve, state, ownProps)
+    )(Controller);
+};

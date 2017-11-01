@@ -3,5 +3,5 @@ import selectMeta from './selectMeta';
 
 export default createSelector(
     (state, info) => selectMeta(state, info),
-    (meta) => !(meta.isLoading || meta.loadedAt || meta.error)
-)
+    meta => !(meta.isLoading || meta.loadedAt || meta.error)
+);

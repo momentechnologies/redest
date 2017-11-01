@@ -1,12 +1,12 @@
 export default (retrieveData, props, callback) => {
     const data = retrieveData(props);
-    Object.keys(data).forEach((key) => {
+    Object.keys(data).forEach(key => {
         let info = {
             endpoint: '/' + key,
             reducer: key,
             raw: false,
             filter: null,
-            onlyActions: false
+            onlyActions: false,
         };
 
         if (data[key] && typeof data[key] === 'object') {
@@ -17,6 +17,10 @@ export default (retrieveData, props, callback) => {
             info.filter = data[key].filter;
         } else {
             info.filter = data[key];
+        }
+
+        if (!info.raw && info.filter && typeof info.filter !== 'object') {
+            info.filter = String(info.filter);
         }
 
         callback(info);

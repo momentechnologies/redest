@@ -11,8 +11,8 @@ export default createSelector(
         if (isSingle(filter)) {
             if (!reducerState) return { entity: {}, meta };
             return {
-                entity: reducerState.entities[selectMetaKey(filter)],
-                meta
+                entity: reducerState.entities[filter],
+                meta,
             };
         }
 
@@ -20,11 +20,13 @@ export default createSelector(
 
         let entities = [];
         if (meta.ids && reducerState && reducerState.entities) {
-            entities = meta.ids.map((id) => reducerState.entities[id]).filter((entity) => entity);
+            entities = meta.ids
+                .map(id => reducerState.entities[id])
+                .filter(entity => entity);
         }
         return {
             entities,
-            meta
-        }
+            meta,
+        };
     }
 );

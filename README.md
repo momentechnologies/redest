@@ -1,8 +1,9 @@
 [![npm version](https://badge.fury.io/js/redest.svg)](https://badge.fury.io/js/redest)
 [![Build Status](https://travis-ci.org/momentechnologies/redest.svg?branch=master)](https://travis-ci.org/momentechnologies/redest)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 # Redest
-How you ever been annoyed by the amount of boilerplate which comes with communicating to 
-the REST Api from react/redux? well this is what we are trying to solve here. 
+How you ever been annoyed by the amount of boilerplate which comes with communicating to
+the REST Api from react/redux? well this is what we are trying to solve here.
 
 This package requires you to have setup an api that follows the REST API conventions.
 
@@ -42,7 +43,7 @@ called the `selector function`. Under is an example of the Redest wrapper.
 ```javascript
 import { Redest } from 'redest';
 
-... 
+...
 
 export default Redest(Component, (props) => ({ users: props.match.params.id}));
 ```
@@ -84,7 +85,7 @@ For example if you want to get a single user.
 This will make a GET request to `/users/1` endpoint.
 
 ### Extra parameters
-If you need to customize some part of the request made in redest you can do so here as well. There is three extra 
+If you need to customize some part of the request made in redest you can do so here as well. There is three extra
 parameter you can pass to it. Under is what they default to internally if you do not pass them. Endpoint and reducer
 is calculated from the object key.
 ```
@@ -109,7 +110,7 @@ The name of the reducer we are going to use internally to store the data.
 Internally Redest will automatically normalize your data. This is an option to disable that.
 
 ## Accessing the data in your props
-Let's says you have setup your selector function to retrieve `users`. This means you will have a prop in your 
+Let's says you have setup your selector function to retrieve `users`. This means you will have a prop in your
 component called `this.props.users`.
 
 ### Select multiple users

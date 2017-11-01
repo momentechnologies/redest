@@ -1,10 +1,10 @@
 import settings from '../settings';
 import buildActions from './buildActions';
 
-export default (dataToRetrieve, props) => {
+export default (dataToRetrieve, props, other) => {
     let newProps = {};
 
-    Object.keys(props).forEach((propKey) => {
+    Object.keys(props).forEach(propKey => {
         if (!propKey.startsWith(settings.internalPropPrefix)) {
             newProps[propKey] = props[propKey];
         }
@@ -12,6 +12,7 @@ export default (dataToRetrieve, props) => {
 
     return {
         ...newProps,
-        ...buildActions(dataToRetrieve, props)
-    }
+        ...buildActions(dataToRetrieve, props),
+        ...other,
+    };
 };

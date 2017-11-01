@@ -5,9 +5,14 @@ import selectMetaKey from './selectMetaKey';
 export default createSelector(
     (state, info) => state.redest[info.reducer],
     (state, info) => selectMetaRaw(state, info),
-    (state, info) => info ? info.filter : null,
-    (reducerState, meta, filter) => ({
+    (state, info) => info,
+    (reducerState, meta, info) => ({
         meta,
-        data: (reducerState && reducerState.data && reducerState.data[selectMetaKey(filter)]) ? reducerState.data[selectMetaKey(filter)]: {}
+        data:
+            reducerState &&
+            reducerState.data &&
+            reducerState.data[selectMetaKey(info)]
+                ? reducerState.data[selectMetaKey(info)]
+                : {},
     })
 );
