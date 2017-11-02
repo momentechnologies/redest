@@ -2,11 +2,11 @@ export default () => ({
     isLoading: false,
     error: false,
     loadedAt: false,
-    ids: []
+    ids: [],
 });
 
 export const newMetaRaw = () => ({
     isLoading: false,
     error: false,
-    loadedAt: false
+    loadedAt: false,
 });

@@ -1,14 +1,10 @@
-import selectMetaKey, {
-    isAll,
-    isMultiple,
-    isSingle
-} from '../selectMetaKey';
+import selectMetaKey, { isAll, isMultiple, isSingle } from '../selectMetaKey';
 
 describe('selectMetaKey', () => {
     it('should create the right key', () => {
         const filters = {
             active: true,
-            published: true
+            published: true,
         };
         const response = 'active_true_published_true';
 
@@ -33,25 +29,25 @@ describe('isAll', () => {
         const tests = [
             {
                 filter: 'all',
-                response: true
+                response: true,
             },
             {
                 filter: null,
-                response: true
+                response: true,
             },
             {
                 filter: {
-                    'see': true
+                    see: true,
                 },
-                response: false
+                response: false,
             },
             {
                 filter: 1,
-                response: false
-            }
+                response: false,
+            },
         ];
 
-        tests.forEach((test) => {
+        tests.forEach(test => {
             expect(isAll(test.filter)).toEqual(test.response);
         });
     });
@@ -62,25 +58,25 @@ describe('isMultiple', () => {
         const tests = [
             {
                 filter: 'all',
-                response: true
+                response: true,
             },
             {
                 filter: null,
-                response: true
+                response: true,
             },
             {
                 filter: {
-                    'see': true
+                    see: true,
                 },
-                response: true
+                response: true,
             },
             {
                 filter: 1,
-                response: false
-            }
+                response: false,
+            },
         ];
 
-        tests.forEach((test) => {
+        tests.forEach(test => {
             expect(isMultiple(test.filter)).toEqual(test.response);
         });
     });
@@ -91,25 +87,25 @@ describe('isSingle', () => {
         const tests = [
             {
                 filter: 'all',
-                response: false
+                response: false,
             },
             {
                 filter: null,
-                response: false
+                response: false,
             },
             {
                 filter: {
-                    'see': true
+                    see: true,
                 },
-                response: false
+                response: false,
             },
             {
                 filter: 1,
-                response: true
-            }
+                response: true,
+            },
         ];
 
-        tests.forEach((test) => {
+        tests.forEach(test => {
             expect(isSingle(test.filter)).toEqual(test.response);
         });
     });

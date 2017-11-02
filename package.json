@@ -11,8 +11,18 @@
     "dev": "watch \"npm run build\" src/",
     "prepublish": "npm run build",
     "test": "jest",
-    "lint": "eslint src/**",
-    "lint:fix": "eslint src/** --fix"
+    "prettier": "prettier --write \"{config,src}/**/*.{jsx,js,json,scss}\"",
+    "eslint": "eslint src",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,json,scss}": [
+      "prettier",
+      "git add"
+    ],
+    "src/**/*.{js,jsx}": [
+      "eslint"
+    ]
   },
   "jest": {
     "roots": [
@@ -43,7 +53,11 @@
     "reselect": "^3.0.0"
   },
   "dependencies": {
-    "eslint-plugin-promise": "^3.5.0",
+    "eslint-config-prettier": "^2.7.0",
+    "eslint-plugin-prettier": "^2.3.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.3.0",
+    "prettier": "^1.7.4",
     "remove": "^0.1.5"
   }
 }

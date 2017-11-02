@@ -1,10 +1,10 @@
 import loopDataToRetrive from './loopDataToRetrive';
 
-const hasError = (meta) => meta.error && !meta.isLoading;
+const hasError = meta => meta.error && !meta.isLoading;
 
 export default (dataToRetrieve, props) => {
     let error = false;
-    loopDataToRetrive(dataToRetrieve, props, (info) => {
+    loopDataToRetrive(dataToRetrieve, props, info => {
         if (info.onlyActions) return;
         if (!error) {
             const meta = props[info.reducer].meta;
@@ -12,4 +12,4 @@ export default (dataToRetrieve, props) => {
         }
     });
     return error;
-}
+};

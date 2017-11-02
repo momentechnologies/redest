@@ -1,6 +1,6 @@
 import resetMeta from './utils/resetMeta';
 
-export default (state) => ({
+export default state => ({
     ...state,
-    meta: resetMeta(state.meta)
+    meta: resetMeta(state.meta),
 });

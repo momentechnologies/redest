@@ -1,55 +1,62 @@
-export default (url, method = 'GET', data = null) => new Promise((resolve, reject) => {
-    let fetchData = {
-        method,
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+export default (url, method = 'GET', data = null) =>
+    new Promise((resolve, reject) => {
+        let fetchData = {
+            method,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+        if (method !== 'GET' && data !== null) {
+            fetchData.body = JSON.stringify(data);
         }
-    };
-    if (method !== 'GET' && data !== null) {
-        fetchData.body = JSON.stringify(data);
-    }
 
-    if (localStorage.getItem('jwt')) {
-        fetchData.headers['Authorization'] = 'Bearer ' + localStorage.getItem('jwt');
-    }
+        if (localStorage.getItem('jwt')) {
+            fetchData.headers['Authorization'] =
+                'Bearer ' + localStorage.getItem('jwt');
+        }
 
-    if (method === 'GET' && data !== null) {
-        url += '?' + Object.keys(data).map((key) => key + '=' + data[key]).join('&');
-    }
+        if (method === 'GET' && data !== null) {
+            url +=
+                '?' +
+                Object.keys(data)
+                    .map(key => key + '=' + data[key])
+                    .join('&');
+        }
 
-    fetch('/api' + url, fetchData)
-        .then((response) => {
-            if (!response.ok && response.status >= 500) {
-                throw {
+        fetch('/api' + url, fetchData)
+            .then(response => {
+                if (!response.ok && response.status >= 500) {
+                    throw {
+                        uid: 0,
+                        message: 'Something went wrong',
+                        extra: {},
+                    };
+                }
+                return response;
+            })
+            .then(response => response.json())
+            .then(json => {
+                if (!json.success) {
+                    throw json;
+                }
+                resolve(json.data);
+            })
+            .catch(thrownError => {
+                let error = {
                     uid: 0,
                     message: 'Something went wrong',
-                    extra: {}
+                    extra: {},
                 };
-            }
-            return response;
-        })
-        .then((response) => response.json())
-        .then((json) => {
-            if (!json.success) {
-                throw json;
-            }
-            resolve(json.data);
-        })
-        .catch((thrownError) => {
-            let error = {
-                uid: 0,
-                message: 'Something went wrong',
-                extra: {}
-            };
-            if (thrownError) {
-                if (thrownError.uid) error.uid = thrownError.uid;
-                if (thrownError.message) error.message = thrownError.message;
-                if (thrownError.extra) error.extra = thrownError.extra;
-            }
-            reject(error);
-        });
-});
+                if (thrownError) {
+                    if (thrownError.uid) error.uid = thrownError.uid;
+                    if (thrownError.message)
+                        error.message = thrownError.message;
+                    if (thrownError.extra) error.extra = thrownError.extra;
+                }
+                reject(error);
+            });
+    });
 
 export const errorCodes = {
     FATAL: 0,
@@ -58,5 +65,5 @@ export const errorCodes = {
     NOT_FOUND: 3,
     PARAMETER_MISSING: 4,
     UNAUTHORIZED: 5,
-    VALIDATION: 6
+    VALIDATION: 6,
 };

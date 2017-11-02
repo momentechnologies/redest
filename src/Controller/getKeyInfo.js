@@ -1,5 +1,5 @@
-export default (key) => ({
+export default key => ({
     url: '/' + key,
     prefix: key,
-    reducer: key
+    reducer: key,
 });

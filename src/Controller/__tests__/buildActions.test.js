@@ -3,15 +3,15 @@ import settings from '../../settings';
 
 describe('buildActions', () => {
     it('should return correct props', () => {
-        const dataToRetrieve = (props) => ({
-            users: 'all'
+        const dataToRetrieve = props => ({
+            users: 'all',
         });
         const props = {
             [settings.internalPropPrefix + 'users']: {
                 prefix: 'users',
-                baseUrl: '/users'
+                baseUrl: '/users',
             },
-            dispatch: () => {}
+            dispatch: () => {},
         };
 
         const response = [
@@ -23,6 +23,8 @@ describe('buildActions', () => {
             'users_update',
         ].sort();
 
-        expect(Object.keys(buildActions(dataToRetrieve, props)).sort()).toEqual(response);
+        expect(Object.keys(buildActions(dataToRetrieve, props)).sort()).toEqual(
+            response
+        );
     });
 });

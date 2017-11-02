@@ -8,7 +8,7 @@ import loadRaw from './reducerActions/loadRaw';
 
 const newInitialState = () => ({
     entities: {},
-    meta: {}
+    meta: {},
 });
 
 export const types = addPrefix('redest', {
@@ -17,19 +17,28 @@ export const types = addPrefix('redest', {
     UPDATE: 'UPDATE',
     CREATE: 'CREATE',
     DELETE: 'DELETE',
-    INVALIDATE: 'INVALIDATE'
+    INVALIDATE: 'INVALIDATE',
 });
 
 const defaultReducer = (state, action) => state;
 
-export default (reducer = defaultReducer) => (state = newInitialState(), action) => {
+export default (reducer = defaultReducer) => (
+    state = newInitialState(),
+    action
+) => {
     switch (action.type) {
-        case types.LOAD: return load(state, action);
-        case types.LOAD_RAW: return loadRaw(state, action);
-        case types.CREATE: return create(state, action);
-        case types.UPDATE: return update(state, action);
-        case types.DELETE: return remove(state, action);
-        case types.INVALIDATE: return invalidate(state);
+        case types.LOAD:
+            return load(state, action);
+        case types.LOAD_RAW:
+            return loadRaw(state, action);
+        case types.CREATE:
+            return create(state, action);
+        case types.UPDATE:
+            return update(state, action);
+        case types.DELETE:
+            return remove(state, action);
+        case types.INVALIDATE:
+            return invalidate(state);
         default:
             return reducer(state, action);
     }

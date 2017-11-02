@@ -4,26 +4,28 @@ import settings from '../../settings';
 
 describe('buildPropsForController', () => {
     it('should return correct props', () => {
-        const dataToRetrieve = (props) => ({
-            users: 'all'
+        const dataToRetrieve = props => ({
+            users: 'all',
         });
         const response = {
             test: 'hello',
             test2311: {
-                'aa': []
+                aa: [],
             },
             dispatch: () => {},
-            ...buildActions(dataToRetrieve, { dispatch: () => {}})
+            ...buildActions(dataToRetrieve, { dispatch: () => {} }),
         };
 
         const props = {
             [settings.internalPropPrefix + 'users']: 'shouldBeGone',
             [settings.internalPropPrefix]: 'shouldBeGone',
-            ...response
+            ...response,
         };
 
         const responseKeys = Object.keys(response).sort();
 
-        expect(Object.keys(buildPropsForComponent(dataToRetrieve, props)).sort()).toEqual(responseKeys);
+        expect(
+            Object.keys(buildPropsForComponent(dataToRetrieve, props)).sort()
+        ).toEqual(responseKeys);
     });
 });

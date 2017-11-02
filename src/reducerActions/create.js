@@ -4,7 +4,7 @@ export default (state, action) => ({
     ...state,
     entities: {
         ...state.entities,
-        [action.payload.id]: action.payload
+        [action.payload.id]: action.payload,
     },
-    meta: resetMeta(state.meta)
+    meta: resetMeta(state.meta),
 });

@@ -5,14 +5,14 @@ describe('resetMeta', () => {
         const param = {
             test: {
                 loadedAt: 12352341234,
-                someParam: 'test'
-            }
+                someParam: 'test',
+            },
         };
         const response = {
             test: {
                 loadedAt: false,
-                someParam: 'test'
-            }
+                someParam: 'test',
+            },
         };
 
         expect(resetMeta(param)).toEqual(response);

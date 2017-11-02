@@ -5,39 +5,39 @@ describe('selectMeta', () => {
         const state = {
             entities: {
                 1: {
-                    attribute: 'value'
+                    attribute: 'value',
                 },
                 2: {
-                    attribute: 'value'
+                    attribute: 'value',
                 },
                 3: {
-                    attribute: 'value'
-                }
+                    attribute: 'value',
+                },
             },
             meta: {
                 all: {
                     testId: 123412,
-                    ids: [1, 2, 3]
+                    ids: [1, 2, 3],
                 },
                 2: {
                     testId: 123412,
-                    ids: [2]
-                }
-            }
+                    ids: [2],
+                },
+            },
         };
 
         const tests = [
             {
                 filter: 'all',
-                response: state.meta.all
+                response: state.meta.all,
             },
             {
                 filter: 1,
-                response: state.meta.all
+                response: state.meta.all,
             },
             {
                 filter: 2,
-                response: state.meta['2']
+                response: state.meta['2'],
             },
             {
                 filter: 4,
@@ -45,12 +45,12 @@ describe('selectMeta', () => {
                     isLoading: false,
                     loadedAt: false,
                     error: false,
-                    ids: []
-                }
-            }
+                    ids: [],
+                },
+            },
         ];
 
-        tests.forEach((test) => {
+        tests.forEach(test => {
             expect(selectMeta(state, test.filter)).toEqual(test.response);
         });
     });

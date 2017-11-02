@@ -5,7 +5,7 @@ describe('getKeyInfo', () => {
         const response = {
             url: '/users',
             prefix: 'users',
-            reducer: 'users'
+            reducer: 'users',
         };
 
         expect(getKeyInfo('users')).toEqual(response);
