@@ -65,12 +65,12 @@ const get = info => dispatch => {
                 if (isMultiple(info.filter)) {
                     entities = response.reduce((acc, entity) => {
                         acc[entity.id] = entity;
-                        ids.push(entity.id);
+                        ids.push(String(entity.id));
                         return acc;
                     }, {});
                 } else {
                     entities[response.id] = response;
-                    ids.push(response.id);
+                    ids.push(String(response.id));
                 }
 
                 dispatch(
