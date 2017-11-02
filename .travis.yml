@@ -7,5 +7,5 @@ node_js:
 cache: yarn
 
 script:
-  - yarn lint
+  - yarn eslint
   - yarn test
