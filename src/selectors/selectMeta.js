@@ -4,11 +4,9 @@ import newMeta from '../reducerActions/utils/newMeta';
 
 export default createSelector(
     (state, info) => state.redest[info.reducer],
-    (state, info) => info,
-    (reducerState, info = null) => {
-        const filter = info ? info.filter : null;
-        const metaKey = selectMetaKey(info);
-
+    (state, info) => selectMetaKey(info),
+    (state, info) => (info ? info.filter : null),
+    (reducerState, metaKey, filter) => {
         // If stuff are not set
         if (!reducerState || !reducerState.meta) return newMeta();
 
