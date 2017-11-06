@@ -40,7 +40,7 @@ export default (url, method = 'GET', data = null) =>
                 if (!json.success) {
                     throw json;
                 }
-                resolve(json.data);
+                resolve(json);
             })
             .catch(thrownError => {
                 let error = {

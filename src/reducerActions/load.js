@@ -16,6 +16,16 @@ export default (state = {}, action) => {
                 },
             };
         case 'success':
+            let pagination = {};
+            if (action.payload.paginationKey) {
+                pagination = {
+                    pagination: {
+                        ...state.pagination,
+                        [action.payload.paginationKey]:
+                            action.payload.pagination,
+                    },
+                };
+            }
             return {
                 ...state,
                 meta: {
@@ -31,6 +41,7 @@ export default (state = {}, action) => {
                     ...state.entities,
                     ...action.payload.entities,
                 },
+                ...pagination,
             };
         case 'error':
             return {

@@ -38,6 +38,7 @@ export default (WrappedComponent, dataToRetrieve, componentSettings = {}) => {
 
             loopDataToRetrive(dataToRetrieve, props, info => {
                 if (info.onlyActions) return;
+                if (info.onlyPagination) return;
                 props.dispatch(restAction(info).getIfNeeded());
             });
         }

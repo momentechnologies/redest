@@ -2,6 +2,8 @@ import fetch from './fetch';
 import { types } from './reducer';
 import { shouldLoad, shouldLoadRaw, selectMetaKey } from './selectors';
 import { isSingle, isAll, isMultiple } from './selectors/selectMetaKey';
+import selectPaginationKey from './selectors/selectPaginationKey';
+import selectRequestData from './selectors/selectRequestData';
 
 const action = (info, action) => ({
     ...action,
@@ -38,14 +40,12 @@ const get = info => dispatch => {
     );
 
     let url = info.endpoint;
-    let requestData = info.filter;
+
     if (isSingle(info.filter)) {
         url += '/' + info.filter;
-        requestData = null;
     }
-    if (isAll(info.filter)) requestData = null;
 
-    fetch(url, 'GET', requestData).then(
+    fetch(url, 'GET', selectRequestData(info)).then(
         response => {
             if (info.raw) {
                 dispatch(
@@ -54,23 +54,33 @@ const get = info => dispatch => {
                         status: 'success',
                         payload: {
                             metaKey,
-                            data: response,
+                            data: response.data,
                         },
                     })
                 );
             } else {
                 let entities = {};
                 let ids = [];
+                let pagination = {};
 
                 if (isMultiple(info.filter)) {
-                    entities = response.reduce((acc, entity) => {
+                    entities = response.data.reduce((acc, entity) => {
                         acc[entity.id] = entity;
                         ids.push(String(entity.id));
                         return acc;
                     }, {});
+                    if (response._pagination) {
+                        pagination = {
+                            pagination: {
+                                total: response._pagination.total,
+                                limit: response._pagination.limit,
+                            },
+                            paginationKey: selectPaginationKey(info),
+                        };
+                    }
                 } else {
-                    entities[response.id] = response;
-                    ids.push(String(response.id));
+                    entities[response.data.id] = response.data;
+                    ids.push(String(response.data.id));
                 }
 
                 dispatch(
@@ -81,6 +91,7 @@ const get = info => dispatch => {
                             metaKey,
                             entities,
                             ids,
+                            ...pagination,
                         },
                     })
                 );
@@ -108,10 +119,10 @@ const create = info => data => dispatch =>
                 dispatch(
                     action(info, {
                         type: types.CREATE,
-                        payload: success,
+                        payload: success.data,
                     })
                 );
-                resolve(success);
+                resolve(success.data);
             },
             error => {
                 reject(error);
@@ -126,7 +137,7 @@ const update = info => (id, data) => dispatch =>
                 dispatch(
                     action(info, {
                         type: types.UPDATE,
-                        payload: success,
+                        payload: success.data,
                     })
                 );
                 resolve(success);
@@ -147,7 +158,7 @@ const remove = info => id => dispatch =>
                         payload: id,
                     })
                 );
-                resolve(success);
+                resolve(success.data);
             },
             error => {
                 reject(error);

@@ -10,8 +10,19 @@ const getKey = (filter = null) => {
     return filter;
 };
 
+const getPagination = pagination => {
+    if (!pagination) return '';
+    return Object.keys(pagination)
+        .map(filterKey => filterKey + '_' + pagination[filterKey])
+        .join('_');
+};
+
 export default (info = {}) => {
-    return info.endpoint + '_' + getKey(info.filter);
+    return [
+        info.endpoint,
+        getKey(info.filter),
+        getPagination(info.pagination),
+    ].join('_');
 };
 
 export const isAll = filter => !filter || filter === 'all';

@@ -6,6 +6,7 @@ export default (dataToRetrieve, props) => {
     let loading = false;
     loopDataToRetrive(dataToRetrieve, props, info => {
         if (info.onlyActions) return;
+        if (info.onlyPagination) return;
         if (!loading) {
             const meta = props[info.reducer].meta;
             loading = meta ? isLoading(props[info.reducer].meta) : true;
