@@ -8,13 +8,9 @@ export default (url, method = 'GET', data = null) =>
             },
             credentials: 'include',
         };
+
         if (method !== 'GET' && data !== null) {
             fetchData.body = JSON.stringify(data);
-        }
-
-        if (localStorage.getItem('jwt')) {
-            fetchData.headers['Authorization'] =
-                'Bearer ' + localStorage.getItem('jwt');
         }
 
         if (method === 'GET' && data !== null) {
