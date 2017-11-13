@@ -6,6 +6,7 @@ export default (url, method = 'GET', data = null) =>
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
         };
         if (method !== 'GET' && data !== null) {
             fetchData.body = JSON.stringify(data);
