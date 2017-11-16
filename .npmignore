@@ -1,2 +1,8 @@
+.github
 src
 .idea
+README.md
+.travis.yml
+.prettierrc
+.prettierignore
+.gitignore

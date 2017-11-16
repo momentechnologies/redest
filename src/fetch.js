@@ -1,58 +1,121 @@
+import axios from 'axios';
+
+let queue = [];
+let timeout = null;
+const waitTimeMS = 10;
+const urlPrefix = '/api';
+const defaultErrorResponse = {
+    uid: 0,
+    message: 'Something went wrong',
+    extra: {},
+};
+
+const fetch = (url, method = 'GET', data = null) => {
+    return axios({
+        method,
+        url: urlPrefix + url,
+        data: method !== 'GET' ? data : null,
+        params: method === 'GET' ? data : null,
+        withCredentials: true,
+    });
+};
+
 export default (url, method = 'GET', data = null) =>
     new Promise((resolve, reject) => {
-        let fetchData = {
+        if (timeout) clearTimeout(timeout);
+        queue.push({
+            url,
             method,
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-        };
+            data,
+            resolve,
+            reject,
+        });
 
-        if (method !== 'GET' && data !== null) {
-            fetchData.body = JSON.stringify(data);
-        }
+        timeout = setTimeout(() => {
+            const processQueue = queue;
+            queue = [];
+            if (processQueue.length === 1) {
+                fetch(
+                    processQueue[0].url,
+                    processQueue[0].method,
+                    processQueue[0].data
+                )
+                    .then(response => {
+                        if (response.status >= 500) {
+                            throw defaultErrorResponse;
+                        }
+                        return response.data;
+                    })
+                    .then(json => {
+                        if (!json.success) {
+                            throw json;
+                        }
+                        processQueue[0].resolve(json);
+                    })
+                    .catch(thrownError => {
+                        let error = defaultErrorResponse;
+                        if (thrownError) {
+                            if (thrownError.uid) error.uid = thrownError.uid;
+                            if (thrownError.message)
+                                error.message = thrownError.message;
+                            if (thrownError.extra)
+                                error.extra = thrownError.extra;
+                        }
+                        processQueue[0].reject(error);
+                    });
 
-        if (method === 'GET' && data !== null) {
-            url +=
-                '?' +
-                Object.keys(data)
-                    .map(key => key + '=' + data[key])
-                    .join('&');
-        }
+                return;
+            }
 
-        fetch('/api' + url, fetchData)
-            .then(response => {
-                if (!response.ok && response.status >= 500) {
-                    throw {
-                        uid: 0,
-                        message: 'Something went wrong',
-                        extra: {},
+            fetch('/batch', 'POST', {
+                batch: processQueue.map((request, index) => {
+                    let url = request.url;
+                    let body = JSON.stringify(request.data);
+                    if (request.method === 'GET' && request.data !== null) {
+                        url +=
+                            '?' +
+                            Object.keys(data)
+                                .map(key => key + '=' + data[key])
+                                .join('&');
+                        body = null;
+                    }
+                    return {
+                        method: request.method,
+                        url: urlPrefix + url,
+                        body,
+                        'content-type': 'application/json',
+                        name: index,
                     };
-                }
-                return response;
+                }),
             })
-            .then(response => response.json())
-            .then(json => {
-                if (!json.success) {
-                    throw json;
-                }
-                resolve(json);
-            })
-            .catch(thrownError => {
-                let error = {
-                    uid: 0,
-                    message: 'Something went wrong',
-                    extra: {},
-                };
-                if (thrownError) {
-                    if (thrownError.uid) error.uid = thrownError.uid;
-                    if (thrownError.message)
-                        error.message = thrownError.message;
-                    if (thrownError.extra) error.extra = thrownError.extra;
-                }
-                reject(error);
-            });
+                .then(response => {
+                    if (response.status !== 200) throw 'Request not successful';
+                    response.data.forEach((response, index) => {
+                        const requestObject = processQueue[index];
+                        if (response.code >= 500 || !response.body) {
+                            return requestObject.reject(defaultErrorResponse);
+                        }
+
+                        const body = JSON.parse(response.body);
+
+                        if (!body.success) {
+                            let error = defaultErrorResponse;
+                            if (body.uid) error.uid = thrownError.uid;
+                            if (body.message)
+                                error.message = thrownError.message;
+                            if (body.extra) error.extra = thrownError.extra;
+                            return requestObject.reject(error);
+                        }
+
+                        return requestObject.resolve(body);
+                    });
+                })
+                .catch(error => {
+                    processQueue.forEach((queueItem, index) => {
+                        processQueue[index].reject(defaultErrorResponse);
+                    });
+                });
+        }, waitTimeMS);
     });
 
 export const errorCodes = {
