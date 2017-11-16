@@ -96,18 +96,19 @@ export default (url, method = 'GET', data = null) =>
                             return requestObject.reject(defaultErrorResponse);
                         }
 
-                        const body = JSON.parse(response.body);
+                        const body = response.body;
 
-                        if (!body.success) {
+                        if (!response.body.success) {
                             let error = defaultErrorResponse;
-                            if (body.uid) error.uid = thrownError.uid;
-                            if (body.message)
+                            if (response.body.uid) error.uid = thrownError.uid;
+                            if (response.body.message)
                                 error.message = thrownError.message;
-                            if (body.extra) error.extra = thrownError.extra;
+                            if (response.body.extra)
+                                error.extra = thrownError.extra;
                             return requestObject.reject(error);
                         }
 
-                        return requestObject.resolve(body);
+                        return requestObject.resolve(response.body);
                     });
                 })
                 .catch(error => {
