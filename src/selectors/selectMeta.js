@@ -15,14 +15,16 @@ export default createSelector(
 
         // If single look for matching ids
         if (isSingle(filter) && reducerState.entities[filter]) {
-            const metaWithId = Object.keys(
-                reducerState.meta
-            ).find(currentMetaKey => {
-                if (!reducerState.meta[currentMetaKey].ids) return false;
-                return (
-                    reducerState.meta[currentMetaKey].ids.indexOf(filter) !== -1
-                );
-            });
+            const metaWithId = Object.keys(reducerState.meta).find(
+                currentMetaKey => {
+                    if (!reducerState.meta[currentMetaKey].ids) return false;
+                    return (
+                        reducerState.meta[currentMetaKey].ids.indexOf(
+                            filter
+                        ) !== -1
+                    );
+                }
+            );
             if (metaWithId) return reducerState.meta[metaWithId];
             return newMeta();
         }
