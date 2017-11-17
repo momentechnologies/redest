@@ -6,13 +6,15 @@ export default createSelector(
     (state, info) => state.redest[info.reducer],
     (state, info) => selectMetaRaw(state, info),
     (state, info) => selectMetaKey(info),
-    (reducerState, meta, metaKey) => {
+    (state, info) => info.selector,
+    (reducerState, meta, metaKey, selector) => {
+        const data =
+            reducerState && reducerState.data && reducerState.data[metaKey]
+                ? reducerState.data[metaKey]
+                : {};
         return {
             meta,
-            data:
-                reducerState && reducerState.data && reducerState.data[metaKey]
-                    ? reducerState.data[metaKey]
-                    : {},
+            data: selector ? selector(data) : data,
         };
     }
 );

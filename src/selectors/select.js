@@ -12,12 +12,14 @@ export default createSelector(
             ? state.redest[info.reducer].pagination
             : null,
     (state, info) => info,
-    (meta, entities, pagination, info = null) => {
+    (meta, entities, pagination, info) => {
         const filter = info ? info.filter : null;
         if (isSingle(filter)) {
             if (!entities) return { entity: {}, meta };
             return {
-                entity: entities[filter],
+                entity: info.selector
+                    ? info.selector(entities[filter])
+                    : entities[filter],
                 meta,
             };
         }
@@ -37,7 +39,9 @@ export default createSelector(
         }
 
         return {
-            entities: returnEntities,
+            entities: info.selector
+                ? info.selector(returnEntities)
+                : returnEntities,
             meta,
             pagination: returnPagination,
         };

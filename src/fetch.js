@@ -74,8 +74,8 @@ export default (url, method = 'GET', data = null) =>
                     if (request.method === 'GET' && request.data !== null) {
                         url +=
                             '?' +
-                            Object.keys(data)
-                                .map(key => key + '=' + data[key])
+                            Object.keys(request.data)
+                                .map(key => key + '=' + request.data[key])
                                 .join('&');
                         body = null;
                     }
