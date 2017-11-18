@@ -4,59 +4,86 @@ import selectMeta from '../selectMeta';
 describe('select', () => {
     it('should return correct data', () => {
         const state = {
-            entities: {
-                1: {
-                    attribute: 'value',
-                },
-                2: {
-                    attribute: 'value',
-                },
-                3: {
-                    attribute: 'value',
-                },
-            },
-            meta: {
-                all: {
-                    testId: 123412,
-                    ids: [1, 2, 3],
-                },
-                2: {
-                    testId: 123412,
-                    ids: [2],
+            redest: {
+                testReducer: {
+                    entities: {
+                        1: {
+                            attribute: 'value',
+                        },
+                        2: {
+                            attribute: 'value',
+                        },
+                        3: {
+                            attribute: 'value',
+                        },
+                    },
+                    meta: {
+                        _all_: {
+                            testId: 123412,
+                            ids: [1, 2, 3],
+                        },
+                        2: {
+                            testId: 123412,
+                            ids: [2],
+                        },
+                    },
                 },
             },
         };
 
         const tests = [
             {
-                filter: 'all',
+                info: {
+                    filter: 'all',
+                    reducer: 'testReducer',
+                },
                 response: {
                     entities: [
-                        state.entities[1],
-                        state.entities[2],
-                        state.entities[3],
+                        state.redest.testReducer.entities[1],
+                        state.redest.testReducer.entities[2],
+                        state.redest.testReducer.entities[3],
                     ],
-                    meta: selectMeta(state, 'all'),
+                    meta: selectMeta(state, {
+                        filter: 'all',
+                        reducer: 'testReducer',
+                    }),
+                    pagination: null,
                 },
             },
             {
-                filter: 1,
+                info: {
+                    filter: 1,
+                    reducer: 'testReducer',
+                },
                 response: {
-                    entity: state.entities[1],
-                    meta: selectMeta(state, 1),
+                    entity: state.redest.testReducer.entities[1],
+                    meta: selectMeta(state, {
+                        filter: 1,
+                        reducer: 'testReducer',
+                    }),
+                    pagination: null,
                 },
             },
             {
-                filter: 2,
+                info: {
+                    filter: 2,
+                    reducer: 'testReducer',
+                },
                 response: {
-                    entity: state.entities[2],
-                    meta: selectMeta(state, 2),
+                    entity: state.redest.testReducer.entities[2],
+                    meta: selectMeta(state, {
+                        filter: 2,
+                        reducer: 'testReducer',
+                    }),
+                    pagination: null,
                 },
             },
         ];
 
+        console.log(tests[0].response.meta);
+
         tests.forEach(test => {
-            expect(select(state, test.filter)).toEqual(test.response);
+            expect(select(state, test.info)).toEqual(test.response);
         });
     });
 });

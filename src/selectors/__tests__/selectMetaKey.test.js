@@ -2,25 +2,32 @@ import selectMetaKey, { isAll, isMultiple, isSingle } from '../selectMetaKey';
 
 describe('selectMetaKey', () => {
     it('should create the right key', () => {
-        const filters = {
-            active: true,
-            published: true,
+        const info = {
+            filter: {
+                active: true,
+                published: true,
+            },
+            endpoint: '/test',
         };
-        const response = 'active_true_published_true';
+        const response = '/test_active_true_published_true_';
 
-        expect(selectMetaKey(filters)).toEqual(response);
+        expect(selectMetaKey(info)).toEqual(response);
     });
 
     it('should create all key', () => {
-        expect(selectMetaKey(null)).toEqual('all');
+        expect(selectMetaKey({ filter: null })).toEqual('_all_');
     });
 
     it('should create all key', () => {
-        expect(selectMetaKey('all')).toEqual('all');
+        expect(selectMetaKey('all')).toEqual('_all_');
     });
 
     it('should create single key', () => {
-        expect(selectMetaKey(1)).toEqual(1);
+        expect(
+            selectMetaKey({
+                filter: 1,
+            })
+        ).toEqual('_1_');
     });
 });
 

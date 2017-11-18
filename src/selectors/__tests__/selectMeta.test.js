@@ -3,44 +3,60 @@ import selectMeta from '../selectMeta';
 describe('selectMeta', () => {
     it('should return the correct meta', () => {
         const state = {
-            entities: {
-                1: {
-                    attribute: 'value',
-                },
-                2: {
-                    attribute: 'value',
-                },
-                3: {
-                    attribute: 'value',
-                },
-            },
-            meta: {
-                all: {
-                    testId: 123412,
-                    ids: [1, 2, 3],
-                },
-                2: {
-                    testId: 123412,
-                    ids: [2],
+            redest: {
+                test: {
+                    entities: {
+                        1: {
+                            attribute: 'value',
+                        },
+                        2: {
+                            attribute: 'value',
+                        },
+                        3: {
+                            attribute: 'value',
+                        },
+                    },
+                    meta: {
+                        _all_: {
+                            testId: 123412,
+                            ids: [1, 2, 3],
+                        },
+                        2: {
+                            testId: 123412,
+                            ids: [2],
+                        },
+                    },
                 },
             },
         };
 
         const tests = [
             {
-                filter: 'all',
-                response: state.meta.all,
+                info: {
+                    filter: 'all',
+                    reducer: 'test',
+                },
+                response: state.redest.test.meta._all_,
             },
             {
-                filter: 1,
-                response: state.meta.all,
+                info: {
+                    filter: 1,
+                    reducer: 'test',
+                },
+                response: state.redest.test.meta._all_,
             },
             {
-                filter: 2,
-                response: state.meta['2'],
+                info: {
+                    filter: 2,
+                    reducer: 'test',
+                },
+                response: state.redest.test.meta['2'],
             },
             {
-                filter: 4,
+                info: {
+                    filter: 4,
+                    reducer: 'test',
+                },
                 response: {
                     isLoading: false,
                     loadedAt: false,
@@ -51,7 +67,7 @@ describe('selectMeta', () => {
         ];
 
         tests.forEach(test => {
-            expect(selectMeta(state, test.filter)).toEqual(test.response);
+            expect(selectMeta(state, test.info)).toEqual(test.response);
         });
     });
 });

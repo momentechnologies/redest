@@ -15,16 +15,17 @@ export default createSelector(
     (meta, entities, pagination, info) => {
         const filter = info ? info.filter : null;
         if (isSingle(filter)) {
-            if (!entities) return { entity: {}, meta };
+            if (!entities) return { entity: {}, meta, pagination: null };
             return {
                 entity: info.selector
                     ? info.selector(entities[filter])
                     : entities[filter],
                 meta,
+                pagination: null,
             };
         }
 
-        if (!entities) return { entities: {}, meta };
+        if (!entities) return { entities: {}, meta, pagination: null };
 
         let returnEntities = [];
         if (meta.ids && entities) {
