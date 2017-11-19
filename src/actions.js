@@ -1,8 +1,12 @@
 import fetch from './fetch';
 import { types } from './reducer';
 import { shouldLoad, shouldLoadRaw, selectMetaKey } from './selectors';
-import { isSingle, isAll, isMultiple } from './selectors/selectMetaKey';
-import selectPaginationKey from './selectors/selectPaginationKey';
+import {
+    isSingle,
+    isAll,
+    isMultiple,
+    getFilterOnlyKey,
+} from './selectors/selectMetaKey';
 import selectRequestData from './selectors/selectRequestData';
 
 const action = (info, action) => ({
@@ -75,7 +79,7 @@ const get = info => dispatch => {
                                 total: response._pagination.total,
                                 limit: response._pagination.limit,
                             },
-                            paginationKey: selectPaginationKey(info),
+                            paginationKey: getFilterOnlyKey(info),
                         };
                     }
                 } else {

@@ -1,13 +1,13 @@
-const getKey = (filter = null) => {
-    if (isAll(filter)) return 'all';
+export const getFilterOnlyKey = (info = null) => {
+    if (isAll(info.filter)) return 'all';
 
-    if (isMultiple(filter)) {
-        return Object.keys(filter)
-            .map(filterKey => filterKey + '_' + filter[filterKey])
+    if (isMultiple(info.filter)) {
+        return Object.keys(info.filter)
+            .map(filterKey => filterKey + '_' + info.filter[filterKey])
             .join('_');
     }
 
-    return filter;
+    return info.filter;
 };
 
 const getPagination = pagination => {
@@ -20,7 +20,7 @@ const getPagination = pagination => {
 export default (info = {}) => {
     return [
         info.endpoint,
-        getKey(info.filter),
+        getFilterOnlyKey(info),
         getPagination(info.pagination),
     ].join('_');
 };

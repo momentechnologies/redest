@@ -80,8 +80,6 @@ describe('select', () => {
             },
         ];
 
-        console.log(tests[0].response.meta);
-
         tests.forEach(test => {
             expect(select(state, test.info)).toEqual(test.response);
         });

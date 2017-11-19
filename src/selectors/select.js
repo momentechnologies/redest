@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect';
 import selectMeta from './selectMeta';
-import selectMetaKey, { isSingle } from './selectMetaKey';
-import selectPaginationKey from './selectPaginationKey';
+import selectMetaKey, { isSingle, getFilterOnlyKey } from './selectMetaKey';
 
 export default createSelector(
     (state, info) => selectMeta(state, info),
@@ -34,7 +33,7 @@ export default createSelector(
                 .filter(entity => entity);
         }
         let returnPagination = null;
-        const paginationKey = selectPaginationKey(info);
+        const paginationKey = getFilterOnlyKey(info);
         if (paginationKey && pagination && pagination[paginationKey]) {
             returnPagination = pagination[paginationKey];
         }
