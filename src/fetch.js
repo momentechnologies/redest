@@ -1,9 +1,9 @@
 import axios from 'axios';
+import { getSettings } from './settings';
 
 let queue = [];
 let timeout = null;
 const waitTimeMS = 10;
-const urlPrefix = '/api';
 const defaultErrorResponse = {
     uid: 0,
     message: 'Something went wrong',
@@ -13,7 +13,7 @@ const defaultErrorResponse = {
 const fetch = (url, method = 'GET', data = null) => {
     return axios({
         method,
-        url: urlPrefix + url,
+        url: getSettings().requests.prefix + url,
         data: method !== 'GET' ? data : null,
         params: method === 'GET' ? data : null,
         withCredentials: true,
@@ -81,7 +81,7 @@ export default (url, method = 'GET', data = null) =>
                     }
                     return {
                         method: request.method,
-                        url: urlPrefix + url,
+                        url: getSettings().requests.prefix + url,
                         body,
                         'content-type': 'application/json',
                         name: index,

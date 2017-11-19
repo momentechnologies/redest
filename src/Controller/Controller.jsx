@@ -7,7 +7,7 @@ import loopDataToRetrive from './loopDataToRetrive';
 import isLoading from './isLoading';
 import hasErrors from './hasErrors';
 import restAction from '../actions';
-import settings from '../settings';
+import { getSettings } from '../settings';
 
 const defaultSettings = {
     autoHandleError: true,
@@ -34,7 +34,7 @@ export default (WrappedComponent, dataToRetrieve, componentSettings = {}) => {
         }
 
         check(props) {
-            if (props[settings.internalPropPrefix + 'error']) return;
+            if (props[getSettings().internalPropPrefix + 'error']) return;
 
             loopDataToRetrive(dataToRetrieve, props, info => {
                 if (info.onlyActions) return;
@@ -46,6 +46,7 @@ export default (WrappedComponent, dataToRetrieve, componentSettings = {}) => {
         render() {
             let error = false;
             let loading = false;
+            const settings = getSettings();
 
             if (this.props[settings.internalPropPrefix + 'error']) {
                 return <div>error</div>;

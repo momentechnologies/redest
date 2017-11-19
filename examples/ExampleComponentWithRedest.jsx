@@ -12,8 +12,5 @@ class Wrapper extends React.Component {
 }
 
 export default Redest(Wrapper, () => ({
-    clubInfo: {
-        endpoint: '/club-info',
-        raw: true,
-    },
+    users: 'all',
 }));
