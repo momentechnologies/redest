@@ -77,7 +77,7 @@ export default (url, method = 'GET', data = null) =>
                 settings.requests.batch.buildRequestBody(
                     processQueue.map((request, index) => {
                         let url = request.url;
-                        let body = JSON.stringify(request.data);
+                        let body = request.data;
                         if (request.method === 'GET' && request.data !== null) {
                             url +=
                                 '?' +
