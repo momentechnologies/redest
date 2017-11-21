@@ -8,6 +8,7 @@ import {
     getFilterOnlyKey,
 } from './selectors/selectMetaKey';
 import selectRequestData from './selectors/selectRequestData';
+import { getSettings } from './settings';
 
 const action = (info, action) => ({
     ...action,
@@ -51,6 +52,8 @@ const get = info => dispatch => {
 
     fetch(url, 'GET', selectRequestData(info)).then(
         response => {
+            const settings = getSettings();
+            const requestData = settings.requests.retrieveRequestData(response);
             if (info.raw) {
                 dispatch(
                     action(info, {
@@ -58,7 +61,7 @@ const get = info => dispatch => {
                         status: 'success',
                         payload: {
                             metaKey,
-                            data: response.data,
+                            data: requestData,
                         },
                     })
                 );
@@ -68,22 +71,24 @@ const get = info => dispatch => {
                 let pagination = {};
 
                 if (isMultiple(info.filter)) {
-                    entities = response.data.reduce((acc, entity) => {
+                    entities = requestData.reduce((acc, entity) => {
                         acc[entity.id] = entity;
                         ids.push(String(entity.id));
                         return acc;
                     }, {});
-                    if (response._pagination) {
+
+                    const paginationData = settings.requests.retrievePaginationData(
+                        response
+                    );
+
+                    if (paginationData) {
                         pagination = {
-                            pagination: {
-                                total: response._pagination.total,
-                                limit: response._pagination.limit,
-                            },
+                            pagination: paginationData,
                             paginationKey: getFilterOnlyKey(info),
                         };
                     }
                 } else {
-                    entities[response.data.id] = response.data;
+                    entities[requestData.id] = requestData;
                     ids.push(String(response.data.id));
                 }
 

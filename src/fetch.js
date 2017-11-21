@@ -92,26 +92,7 @@ export default (url, method = 'GET', data = null) =>
                             body,
                         };
                     })
-                ),
-                {
-                    batch: processQueue.map((request, index) => {
-                        let url = request.url;
-                        let body = JSON.stringify(request.data);
-                        if (request.method === 'GET' && request.data !== null) {
-                            url +=
-                                '?' +
-                                Object.keys(request.data)
-                                    .map(key => key + '=' + request.data[key])
-                                    .join('&');
-                            body = null;
-                        }
-                        return {
-                            method: request.method,
-                            url: settings.requests.prefix + url,
-                            body,
-                        };
-                    }),
-                }
+                )
             )
                 .then(response => {
                     if (response.status !== 200) throw 'Request not successful';
