@@ -54,16 +54,37 @@ export combineReducers({
 It is not necessary to pass an options object. Under is all the options you can
 pass to it
 
-```json
-{
-    "components": {
-        "loading": null,
-        "error": null
+```javascript
+const defaultSettings = {
+    internalPropPrefix: '__redest__',
+    components: {
+        loading: null,
+        error: null,
     },
-    "requests": {
-        "prefix": ""
-    }
-}
+    requests: {
+        prefix: '',
+        retrieveRequestData: response => response.data,
+        retrievePaginationData: response => response._pagination,
+        isErrorResponse: (statusCode, response) => statusCode >= 400,
+        processError: error => error,
+        batch: {
+            enabled: false,
+            delayTimeMS: 10,
+            url: '/batch',
+            method: 'POST',
+            buildRequestBody: requests => {
+                return {
+                    batch: requests,
+                };
+            },
+            parseResponse: response =>
+                response.map(singleResponse => ({
+                    body: singleResponse.body,
+                    statusCode: singleResponse.statusCode,
+                })),
+        },
+    },
+};
 ```
 
 #### Component loading
@@ -77,6 +98,84 @@ This is the component it should render by default when there is an error.
 #### Requests prefix
 
 Here you can define a prefix you want all of your requests to have.
+
+#### Requests retrieveRequestData
+
+This method is called before your response is handled. The default here assumes
+that the response looks like this:
+
+```json
+{
+    "data": "some data"
+}
+```
+
+It is important to return the data formated in the correct way from this
+function.
+
+##### multiple entities
+
+Should return an array of entities. It is important that all entities have an id
+so that we can normalize the data.
+
+##### single entity
+
+Should return an object of the entity. It is important that all entities have an
+id so that we can normalize the data.
+
+##### raw
+
+Should return whatever is going to be stored
+
+#### Requests retrievePaginationData
+
+should return an object containing the pagination info of the request or be null
+if there is no request data. the object should look like this:
+
+```json
+{
+    "total": 1,
+    "limit": 5
+}
+```
+
+Total is total number of entities there is and the limit is how many entities we
+should display per page.
+
+#### Requests isErrorResponse
+
+To find out if the request is successful
+
+#### Requests processError
+
+do whatever you need to format the error
+
+#### Requests batch
+
+This is so that if you make multiple request in the delayTimeMS (default 10ms)
+they will be sent as one request.
+
+##### buildRequestBody
+
+takes a list of requests as an argument. Each element looks like this:
+
+```json
+{
+    "method": "GET",
+    "url": "/users",
+    "body": "some data"
+}
+```
+
+It should return an object which will be sent as the request body.
+
+##### parseResponse
+
+Takes the response as it's only parameter. this function should return an array
+of object containing two elements.
+
+1. `body` should be whatever would have been return if it was a normal request
+2. `statusCode` the html status code.
 
 ## Setup your component
 
@@ -110,6 +209,16 @@ Let's say you want to retrieve all users.
 }
 ```
 
+or
+
+```json
+{
+    "users": {
+        "filter": "all"
+    }
+}
+```
+
 This will make a GET request to `/users` endpoint.
 
 ### Get all with parameters
@@ -135,6 +244,16 @@ For example if you want to get a single user.
 ```json
 {
     "users": 1
+}
+```
+
+or
+
+```json
+{
+    "users": {
+        "filter": 1
+    }
 }
 ```
 
@@ -228,6 +347,57 @@ variable will have this structure:
     }
 }
 ```
+
+### dispatching actions in your component
+
+All the actions will be made available alongside the meta, entity, entities and
+data object that we saw above. So let's say that you fetched all users, your
+`users` prop will actually look like this:
+
+```javascript
+users = {
+    entities: [],
+    meta: {
+        isLoading: false,
+        loadedAt: 10923874,
+        error: false,
+        ids: [],
+    },
+    actions: {
+        create: data => {},
+        update: (id, data) => {},
+        remove: id => {},
+        invalidate: () => {},
+    },
+};
+```
+
+All actions under assumes that we are working with users.
+
+#### Create
+
+It takes one argument which is an object that contains the data you want to send
+to the backend. It will automatically make a POST request to `/users` endpoint.
+
+#### Update
+
+It takes two arguments
+
+1. the id of the entity you want to Update
+2. the data you want to send to the backend
+
+This endpoint will make a POST request to `/users/:id`. So if the id you want to
+update is `10`, it will make a request to `/users/10`
+
+#### Remove
+
+It takes one argument which is the id of the entity you want to remove. It will
+make a DELETE request to `/users/:id`
+
+#### Invalidate
+
+This function will invalidate the cache so that we will refetch the next time
+the data is accessed.
 
 # Contributing
 
