@@ -401,4 +401,5 @@ the data is accessed.
 
 # Contributing
 
-All contribution is welcomed. Just create a pull request and we will review it.
+Please take a look at our
+[contribution page](https://github.com/momentechnologies/redest/blob/master/CONTRIBUTING.md)
