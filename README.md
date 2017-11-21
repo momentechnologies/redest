@@ -45,9 +45,38 @@ import { combineReducers } from 'redux';
 import { reducerSetup } from 'redest';
 
 export combineReducers({
-    redest: ...reducerSetup()
+    redest: ...reducerSetup(options)
 });
 ```
+
+### Options
+
+It is not necessary to pass an options object. Under is all the options you can
+pass to it
+
+```json
+{
+    "components": {
+        "loading": null,
+        "error": null
+    },
+    "requests": {
+        "prefix": ""
+    }
+}
+```
+
+#### Component loading
+
+This is the component it should render by default when loading.
+
+#### Component error
+
+This is the component it should render by default when there is an error.
+
+#### Requests prefix
+
+Here you can define a prefix you want all of your requests to have.
 
 ## Setup your component
 
@@ -61,7 +90,7 @@ import { Redest } from 'redest';
 
 ...
 
-export default Redest(Component, (props) => ({ users: props.match.params.id}));
+export default Redest(Component, (props) => ({ users: props.match.params.id }));
 ```
 
 ## The Selector function
@@ -75,9 +104,9 @@ all the different types of objects you can return.
 
 Let's say you want to retrieve all users.
 
-```
+```json
 {
-    'users': 'all'
+    "users": "all"
 }
 ```
 
@@ -87,11 +116,11 @@ This will make a GET request to `/users` endpoint.
 
 For example if you want to get all female users.
 
-```
+```json
 {
-    'users': {
-        filter: {
-            gender: 'female'
+    "users": {
+        "filter": {
+            "gender": "female"
         }
     }
 }
@@ -103,9 +132,9 @@ This will make a GET request to `/users?gender=female` endpoint.
 
 For example if you want to get a single user.
 
-```
+```json
 {
-    'users': 1
+    "users": 1
 }
 ```
 
@@ -118,12 +147,12 @@ here as well. There is three extra parameter you can pass to it. Under is what
 they default to internally if you do not pass them. Endpoint and reducer is
 calculated from the object key.
 
-```
+```json
 {
-    'users': {
-        endpoint: '/users',
-        reducer: 'users,
-        raw: false
+    "users": {
+        "endpoint": "/users",
+        "reducer": "users",
+        "raw": false
     }
 }
 ```
@@ -156,14 +185,14 @@ you will have a prop in your component called `this.props.users`.
 If you have decided to retrieve multiple users entities the `this.props.users`
 variable will have this structure:
 
-```
+```json
 {
-    entities: [],
-    meta: {
-        isLoading: false,
-        loadedAt: 10923874,
-        error: false,
-        ids: []
+    "entities": [],
+    "meta": {
+        "isLoading": false,
+        "loadedAt": 10923874,
+        "error": false,
+        "ids": []
     }
 }
 ```
@@ -173,13 +202,13 @@ variable will have this structure:
 If you have decided to retrieve one user the `this.props.users` variable will
 have this structure:
 
-```
+```json
 {
-    entity: {},
-    meta: {
-        isLoading: false,
-        loadedAt: 10923874,
-        error: false
+    "entity": {},
+    "meta": {
+        "isLoading": false,
+        "loadedAt": 10923874,
+        "error": false
     }
 }
 ```
@@ -189,13 +218,13 @@ have this structure:
 If you have decided to retrieve data with `raw = true` the `this.props.users`
 variable will have this structure:
 
-```
+```json
 {
-    data: {},
-    meta: {
-        isLoading: false,
-        loadedAt: 10923874,
-        error: false
+    "data": {},
+    "meta": {
+        "isLoading": false,
+        "loadedAt": 10923874,
+        "error": false
     }
 }
 ```
