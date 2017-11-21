@@ -1,6 +1,5 @@
 import buildPropsForComponent from '../buildPropsForComponent';
-import buildActions from '../buildActions';
-import settings from '../../settings';
+import { getSettings } from '../../settings';
 
 describe('buildPropsForComponent', () => {
     it('should return correct props', () => {
@@ -13,12 +12,11 @@ describe('buildPropsForComponent', () => {
                 aa: [],
             },
             dispatch: () => {},
-            ...buildActions(dataToRetrieve, { dispatch: () => {} }),
         };
 
         const props = {
-            [settings.internalPropPrefix + 'users']: 'shouldBeGone',
-            [settings.internalPropPrefix]: 'shouldBeGone',
+            [getSettings().internalPropPrefix + 'users']: 'shouldBeGone',
+            [getSettings().internalPropPrefix]: 'shouldBeGone',
             ...response,
         };
 

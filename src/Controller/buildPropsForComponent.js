@@ -1,5 +1,4 @@
 import { getSettings } from '../settings';
-import buildActions from './buildActions';
 import loopDataToRetrive from './loopDataToRetrive';
 import buildReducerActions from './buildReducerActions';
 
@@ -22,7 +21,6 @@ export default (dataToRetrieve, props, other) => {
 
     return {
         ...newProps,
-        ...buildActions(dataToRetrieve, props),
         ...other,
     };
 };
