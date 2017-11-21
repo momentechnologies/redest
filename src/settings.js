@@ -20,8 +20,8 @@ let settings = {
             },
             parseResponse: response =>
                 response.map(singleResponse => ({
-                    body: response.data,
-                    statusCode: response.statusCode,
+                    body: singleResponse.body,
+                    statusCode: singleResponse.statusCode,
                 })),
         },
         retrieveRequestData: response => response.data,
