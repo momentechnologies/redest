@@ -9,7 +9,7 @@ export default (dataToRetrieve, props) => {
         if (info.onlyPagination) return;
         if (!loading) {
             const meta = props[info.reducer].meta;
-            loading = meta ? isLoading(props[info.reducer].meta) : true;
+            loading = meta ? isLoading(meta) : true;
         }
     });
     return loading;

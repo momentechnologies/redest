@@ -21,7 +21,7 @@ export default (retrieveData, props, callback) => {
                 info.onlyPagination = data[key].onlyPagination;
             if (data[key].raw === true) info.raw = true;
             if (data[key].pagination) info.pagination = data[key].pagination;
-            info.filter = data[key].filter;
+            if (data[key].filter) info.filter = data[key].filter;
         } else {
             info.filter = data[key];
         }

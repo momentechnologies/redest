@@ -1,6 +1,6 @@
 import loopDataToRetrive from './loopDataToRetrive';
 
-const hasError = meta => meta.error && !meta.isLoading;
+const hasError = meta => !!meta.error && !meta.isLoading;
 
 export default (dataToRetrieve, props) => {
     let error = false;
