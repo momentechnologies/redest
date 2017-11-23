@@ -45,7 +45,7 @@ export default (url, method = 'GET', data = null) =>
         const settings = getSettings();
 
         if (!settings.requests.batch.enabled) {
-            fetchAndProcess(url, method, data, resolve, reject);
+            return fetchAndProcess(url, method, data, resolve, reject);
         }
 
         if (timeout) clearTimeout(timeout);
