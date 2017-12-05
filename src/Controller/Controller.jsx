@@ -8,6 +8,7 @@ import isLoading from './isLoading';
 import hasErrors from './hasErrors';
 import restAction from '../actions';
 import { getSettings } from '../settings';
+import isEqual from 'lodash.isequal';
 
 const defaultSettings = {
     autoHandleError: true,
@@ -89,7 +90,16 @@ export default (WrappedComponent, dataToRetrieve, componentSettings = {}) => {
         dispatch: PropTypes.func.isRequired,
     };
 
-    return connect((state, ownProps) =>
-        buildPropsForController(dataToRetrieve, state, ownProps)
+    return connect(
+        (state, ownProps) => {
+            return buildPropsForController(dataToRetrieve, state, ownProps);
+        },
+        undefined,
+        undefined,
+        {
+            areStatePropsEqual: (next, prev) => {
+                return isEqual(next, prev);
+            },
+        }
     )(Controller);
 };
