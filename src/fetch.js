@@ -23,6 +23,15 @@ const fetchAndProcess = (url, method, data, resolve, reject) => {
     const settings = getSettings();
 
     fetch(url, method, data)
+        .then(
+            response => {
+                return response;
+            },
+            error => {
+                if (!error.response) throw error;
+                return error.response;
+            }
+        )
         .then(response => {
             if (
                 settings.requests.isErrorResponse(
@@ -35,8 +44,8 @@ const fetchAndProcess = (url, method, data, resolve, reject) => {
                 resolve(response.data);
             }
         })
-        .catch(thrownError => {
-            reject(settings.requests.processError(thrownError));
+        .catch(error => {
+            reject(settings.requests.processError(error));
         });
 };
 
