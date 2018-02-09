@@ -30,19 +30,9 @@ const getIfNeeded = info => () => (dispatch, getState) => {
     }
 };
 
-const get = info => dispatch => {
+const get = (info, baseUrl) => dispatch => {
     const metaKey = selectMetaKey(info);
     const type = info.raw ? types.LOAD_RAW : types.LOAD;
-
-    dispatch(
-        action(info, {
-            type,
-            status: 'start',
-            payload: {
-                metaKey,
-            },
-        })
-    );
 
     let url = info.endpoint;
 
@@ -50,75 +40,94 @@ const get = info => dispatch => {
         url += '/' + info.filter;
     }
 
-    fetch(url, 'GET', selectRequestData(info)).then(
-        response => {
-            const settings = getSettings();
-            const requestData = settings.requests.retrieveRequestData(response);
-            if (info.raw) {
-                dispatch(
-                    action(info, {
-                        type,
-                        status: 'success',
-                        payload: {
-                            metaKey,
-                            data: requestData,
-                        },
-                    })
-                );
-            } else {
-                let entities = {};
-                let ids = [];
-                let pagination = {};
+    const data = selectRequestData(info);
 
-                if (isMultiple(info.filter)) {
-                    entities = requestData.reduce((acc, entity) => {
-                        acc[entity.id] = entity;
-                        ids.push(String(entity.id));
-                        return acc;
-                    }, {});
-
-                    const paginationData = settings.requests.retrievePaginationData(
-                        response
-                    );
-
-                    if (paginationData) {
-                        pagination = {
-                            pagination: paginationData,
-                            paginationKey: getFilterOnlyKey(info),
-                        };
-                    }
-                } else {
-                    entities[requestData.id] = requestData;
-                    ids.push(String(response.data.id));
-                }
-
-                dispatch(
-                    action(info, {
-                        type,
-                        status: 'success',
-                        payload: {
-                            metaKey,
-                            entities,
-                            ids,
-                            ...pagination,
-                        },
-                    })
-                );
-            }
-        },
-        error => {
-            dispatch(
-                action(info, {
-                    type,
-                    status: 'error',
-                    payload: {
-                        metaKey,
-                        error,
-                    },
-                })
-            );
-        }
+    dispatch(
+        action(info, {
+            type,
+            status: 'start',
+            payload: {
+                metaKey,
+                info,
+            },
+        })
     );
+
+    return new Promise(resolve => {
+        fetch(url, 'GET', data, baseUrl).then(
+            response => {
+                const settings = getSettings();
+                const requestData = settings.requests.retrieveRequestData(
+                    response
+                );
+                if (info.raw) {
+                    dispatch(
+                        action(info, {
+                            type,
+                            status: 'success',
+                            payload: {
+                                metaKey,
+                                data: requestData,
+                            },
+                        })
+                    );
+                } else {
+                    let entities = {};
+                    let ids = [];
+                    let pagination = {};
+
+                    if (isMultiple(info.filter)) {
+                        entities = requestData.reduce((acc, entity) => {
+                            acc[entity.id] = entity;
+                            ids.push(String(entity.id));
+                            return acc;
+                        }, {});
+
+                        const paginationData = settings.requests.retrievePaginationData(
+                            response
+                        );
+
+                        if (paginationData) {
+                            pagination = {
+                                pagination: paginationData,
+                                paginationKey: getFilterOnlyKey(info),
+                            };
+                        }
+                    } else {
+                        entities[requestData.id] = requestData;
+                        ids.push(String(response.data.id));
+                    }
+
+                    dispatch(
+                        action(info, {
+                            type,
+                            status: 'success',
+                            payload: {
+                                metaKey,
+                                entities,
+                                ids,
+                                ...pagination,
+                            },
+                        })
+                    );
+                }
+                resolve();
+            },
+            error => {
+                dispatch(
+                    action(info, {
+                        type,
+                        status: 'error',
+                        payload: {
+                            metaKey,
+                            error,
+                        },
+                    })
+                );
+                resolve();
+            }
+        );
+    });
 };
 
 const create = info => data => dispatch =>
@@ -189,12 +198,10 @@ const actions = {
     invalidate,
 };
 
-const fillActions = info => {
+export default (info, baseUrl = null) => {
     let response = {};
     Object.keys(actions).forEach(actionKey => {
-        response[actionKey] = actions[actionKey](info);
+        response[actionKey] = actions[actionKey](info, baseUrl);
     });
     return response;
 };
-
-export default info => fillActions(info);

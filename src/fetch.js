@@ -9,20 +9,21 @@ const defaultErrorResponse = {
     extra: {},
 };
 
-const fetch = (url, method = 'GET', data = null) => {
+const fetch = (url, method = 'GET', data = null, baseURL) => {
     return axios({
         method,
         url: getSettings().requests.prefix + url,
         data: method !== 'GET' ? data : null,
         params: method === 'GET' ? data : null,
+        baseURL,
         withCredentials: true,
     });
 };
 
-const fetchAndProcess = (url, method, data, resolve, reject) => {
+const fetchAndProcess = (url, method, data, baseURL, resolve, reject) => {
     const settings = getSettings();
 
-    fetch(url, method, data)
+    fetch(url, method, data, baseURL)
         .then(
             response => {
                 return response;
@@ -49,12 +50,12 @@ const fetchAndProcess = (url, method, data, resolve, reject) => {
         });
 };
 
-export default (url, method = 'GET', data = null) =>
+export default (url, method = 'GET', data = null, baseURL) =>
     new Promise((resolve, reject) => {
         const settings = getSettings();
 
         if (!settings.requests.batch.enabled) {
-            return fetchAndProcess(url, method, data, resolve, reject);
+            return fetchAndProcess(url, method, data, baseURL, resolve, reject);
         }
 
         if (timeout) clearTimeout(timeout);
@@ -62,6 +63,7 @@ export default (url, method = 'GET', data = null) =>
             url,
             method,
             data,
+            baseURL,
             resolve,
             reject,
         });
@@ -74,6 +76,7 @@ export default (url, method = 'GET', data = null) =>
                     processQueue[0].url,
                     processQueue[0].method,
                     processQueue[0].data,
+                    processQueue[0].baseURL,
                     processQueue[0].resolve,
                     processQueue[0].reject
                 );
@@ -101,7 +104,8 @@ export default (url, method = 'GET', data = null) =>
                             body,
                         };
                     })
-                )
+                ),
+                baseURL
             )
                 .then(response => {
                     if (response.status !== 200) throw 'Request not successful';
