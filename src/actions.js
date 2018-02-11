@@ -30,7 +30,7 @@ const getIfNeeded = info => () => (dispatch, getState) => {
     }
 };
 
-const get = (info, baseUrl) => dispatch => {
+const get = (info, axiosOptions) => dispatch => {
     const metaKey = selectMetaKey(info);
     const type = info.raw ? types.LOAD_RAW : types.LOAD;
 
@@ -54,7 +54,7 @@ const get = (info, baseUrl) => dispatch => {
     );
 
     return new Promise(resolve => {
-        fetch(url, 'GET', data, baseUrl).then(
+        fetch(url, 'GET', data, axiosOptions).then(
             response => {
                 const settings = getSettings();
                 const requestData = settings.requests.retrieveRequestData(
@@ -198,10 +198,10 @@ const actions = {
     invalidate,
 };
 
-export default (info, baseUrl = null) => {
+export default (info, axiosOptions = {}) => {
     let response = {};
     Object.keys(actions).forEach(actionKey => {
-        response[actionKey] = actions[actionKey](info, baseUrl);
+        response[actionKey] = actions[actionKey](info, axiosOptions);
     });
     return response;
 };

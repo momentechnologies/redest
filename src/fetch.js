@@ -9,21 +9,21 @@ const defaultErrorResponse = {
     extra: {},
 };
 
-const fetch = (url, method = 'GET', data = null, baseURL) => {
+const fetch = (url, method = 'GET', data = null, axiosOptions = {}) => {
     return axios({
         method,
         url: getSettings().requests.prefix + url,
         data: method !== 'GET' ? data : null,
         params: method === 'GET' ? data : null,
-        baseURL,
         withCredentials: true,
+        ...axiosOptions,
     });
 };
 
-const fetchAndProcess = (url, method, data, baseURL, resolve, reject) => {
+const fetchAndProcess = (url, method, data, axiosOptions, resolve, reject) => {
     const settings = getSettings();
 
-    fetch(url, method, data, baseURL)
+    fetch(url, method, data, axiosOptions)
         .then(
             response => {
                 return response;
@@ -50,12 +50,19 @@ const fetchAndProcess = (url, method, data, baseURL, resolve, reject) => {
         });
 };
 
-export default (url, method = 'GET', data = null, baseURL) =>
+export default (url, method = 'GET', data = null, axiosOptions = {}) =>
     new Promise((resolve, reject) => {
         const settings = getSettings();
 
         if (!settings.requests.batch.enabled) {
-            return fetchAndProcess(url, method, data, baseURL, resolve, reject);
+            return fetchAndProcess(
+                url,
+                method,
+                data,
+                axiosOptions,
+                resolve,
+                reject
+            );
         }
 
         if (timeout) clearTimeout(timeout);
@@ -63,7 +70,7 @@ export default (url, method = 'GET', data = null, baseURL) =>
             url,
             method,
             data,
-            baseURL,
+            axiosOptions,
             resolve,
             reject,
         });
@@ -76,7 +83,7 @@ export default (url, method = 'GET', data = null, baseURL) =>
                     processQueue[0].url,
                     processQueue[0].method,
                     processQueue[0].data,
-                    processQueue[0].baseURL,
+                    processQueue[0].axiosOptions,
                     processQueue[0].resolve,
                     processQueue[0].reject
                 );
@@ -105,7 +112,7 @@ export default (url, method = 'GET', data = null, baseURL) =>
                         };
                     })
                 ),
-                baseURL
+                axiosOptions
             )
                 .then(response => {
                     if (response.status !== 200) throw 'Request not successful';
