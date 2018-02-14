@@ -10,6 +10,7 @@ export default (retrieveData, props, callback) => {
             onlyPagination: false,
             pagination: null,
             selector: null,
+            idKey: 'id',
         };
 
         if (data[key] && typeof data[key] === 'object') {
@@ -22,6 +23,7 @@ export default (retrieveData, props, callback) => {
             if (data[key].raw === true) info.raw = true;
             if (data[key].pagination) info.pagination = data[key].pagination;
             if (data[key].filter) info.filter = data[key].filter;
+            if (data[key].idKey) info.idKey = data[key].idKey;
         } else {
             info.filter = data[key];
         }

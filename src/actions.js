@@ -78,8 +78,8 @@ const get = (info, axiosOptions) => dispatch => {
 
                     if (isMultiple(info.filter)) {
                         entities = requestData.reduce((acc, entity) => {
-                            acc[entity.id] = entity;
-                            ids.push(String(entity.id));
+                            acc[entity[info.idKey]] = entity;
+                            ids.push(String(entity[info.idKey]));
                             return acc;
                         }, {});
 
@@ -94,8 +94,8 @@ const get = (info, axiosOptions) => dispatch => {
                             };
                         }
                     } else {
-                        entities[requestData.id] = requestData;
-                        ids.push(String(response.data.id));
+                        entities[requestData[info.idKey]] = requestData;
+                        ids.push(String(response.data[info.idKey]));
                     }
 
                     dispatch(
@@ -155,7 +155,10 @@ const update = info => (id, data) => dispatch =>
                 dispatch(
                     action(info, {
                         type: types.UPDATE,
-                        payload: success.data,
+                        payload: {
+                            response: success.data,
+                            idKey: info.idKey,
+                        },
                     })
                 );
                 resolve(success);
