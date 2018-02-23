@@ -11,6 +11,7 @@
     "dev": "watch \"npm run build\" src/",
     "prepublish": "npm run build",
     "test": "jest",
+    "test:dev": "watch \"npm run test\" src/",
     "prettier": "prettier --write \"{config,src}/**/*.{jsx,js,json,scss}\"",
     "eslint": "eslint src",
     "precommit": "lint-staged"
