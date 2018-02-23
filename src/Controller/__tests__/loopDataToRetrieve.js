@@ -11,6 +11,7 @@ const setInfo = info => {
         onlyPagination: false,
         pagination: null,
         selector: null,
+        idKey: 'id',
         ...info,
     };
 };
