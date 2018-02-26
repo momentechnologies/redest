@@ -89,20 +89,19 @@ const defaultSettings = {
 
 #### Component loading
 
-This is the component it should render by default when loading.
+This is the component we are rendering by default when loading.
 
 #### Component error
 
-This is the component it should render by default when there is an error.
+This is the component we are rendering by default when there is an error.
 
 #### Requests prefix
 
-Here you can define a prefix you want all of your requests to have.
+Here you can define a prefix you want all of your requests to have. Quite normal to use `/api` here.
 
 #### Requests retrieveRequestData
 
-This method is called before your response is handled. The default here assumes
-that the response looks like this:
+This method is called before your response is handled. The default here assumes that the response looks like this:
 
 ```json
 {
@@ -115,13 +114,11 @@ function.
 
 ##### multiple entities
 
-Should return an array of entities. It is important that all entities have an id
-so that we can normalize the data.
+Should return an array of entities. It is important that all entities have an id so that we can normalize the data.
 
 ##### single entity
 
-Should return an object of the entity. It is important that all entities have an
-id so that we can normalize the data.
+Should return an object of the entity. It is important that all entities have an id so that we can normalize the data.
 
 ##### raw
 
