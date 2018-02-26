@@ -1,0 +1,1 @@
+This app is setup with create-react-app. I have ejected in order to be able to create an endpoint to fetch a list of contributers to show you how fetching works. I have added a timeout of 2000ms to the response to show you that the loading component is rendered
