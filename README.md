@@ -45,7 +45,7 @@ import { combineReducers } from 'redux';
 import { reducerSetup } from 'redest';
 
 export combineReducers({
-    redest: ...reducerSetup(options)
+    redest: reducerSetup(options)
 });
 ```
 
