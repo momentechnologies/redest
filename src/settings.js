@@ -24,6 +24,7 @@ let settings = {
                     statusCode: singleResponse.statusCode,
                 })),
         },
+        configureAxios: axios => axios,
         retrieveRequestData: response => response.data,
         retrievePaginationData: response => response._pagination,
         isErrorResponse: (statusCode, response) => statusCode >= 400,

@@ -10,7 +10,8 @@ const defaultErrorResponse = {
 };
 
 const fetch = (url, method = 'GET', data = null, axiosOptions = {}) => {
-    return axios({
+    const axiosConfigured = getSettings().requests.configureAxios(axios);
+    return axiosConfigured({
         method,
         url: getSettings().requests.prefix + url,
         data: method !== 'GET' ? data : null,
