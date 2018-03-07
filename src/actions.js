@@ -95,7 +95,7 @@ const get = (info, axiosOptions) => dispatch => {
                         }
                     } else {
                         entities[requestData[info.idKey]] = requestData;
-                        ids.push(String(response.data[info.idKey]));
+                        ids.push(String(requestData[info.idKey]));
                     }
 
                     dispatch(
